@@ -1,0 +1,6 @@
+﻿services:
+  movieservice:
+    image: movieservice
+    build:
+      context: .
+      dockerfile: Dockerfile
