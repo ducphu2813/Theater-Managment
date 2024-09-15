@@ -11,4 +11,10 @@ public class RoomRepository : MongoDBRepository<Room>, IRoomRepository
     {
     }
     
+    public async Task<IEnumerable<Room>> AddList(List<Room> rooms)
+    {
+        await _collection.InsertManyAsync(rooms);
+        return rooms;
+    }
+    
 }

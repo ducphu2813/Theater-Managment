@@ -1,13 +1,8 @@
 using Microsoft.Extensions.Options;
+using UserService.Context;
+using UserService.Entity;
 
-using MovieService.Context;
-using MovieService.Entity;
-using MovieService.Repository;
-using MovieService.Repository.Interface;
-using MovieService.Repository.MongoDBRepo;
-using MovieService.Service.Interface;
-
-namespace MovieService;
+namespace UserService;
 
 public class Program
 {
@@ -34,19 +29,8 @@ public class Program
         builder.Services.AddSingleton<MongoDBContext>();
         
         //đăng ký các Repository
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
-        builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-        builder.Services.AddScoped<IMovieScheduleRepository, MovieScheduleRepository>();
-        builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         
         //đăng ký các Service
-        builder.Services.AddScoped<IMovieService, Service.MovieService>();
-        builder.Services.AddScoped<IMovieScheduleService, Service.MovieScheduleService>();
-        builder.Services.AddScoped<IRoomService, Service.RoomService>();
-        
-        //
-        // ============================================
-        // ============================================
 
         var app = builder.Build();
 
@@ -65,6 +49,5 @@ public class Program
         app.MapControllers();
 
         app.Run();
-        
     }
 }

@@ -91,6 +91,23 @@ public class MovieScheduleService : IMovieScheduleService
         var addedMovieSchedule = await _movieScheduleRepository.Add(movieSchedule);
         return addedMovieSchedule;
     }
+    
+    public async Task<List<MovieSchedule>> AddListAsync(List<SaveMovieScheduleDTO> movieScheduleDtos)
+    {
+        var movieSchedules = movieScheduleDtos.Select(ms => new MovieSchedule
+        {
+            MovieId = ms.MovieId,
+            RoomNumber = ms.RoomNumber,
+            ShowTime = ms.ShowTime,
+            SingleSeatPrice = ms.SingleSeatPrice,
+            CoupleSeatPrice = ms.CoupleSeatPrice,
+            CreatedAt = ms.CreatedAt,
+            Status = ms.Status
+        }).ToList();
+        
+        var addedMovieSchedules = await _movieScheduleRepository.AddListAsync(movieSchedules);
+        return addedMovieSchedules;
+    }
 
     public async Task<MovieSchedule> UpdateAsync(string id, SaveMovieScheduleDTO movieScheduleDto)
     {

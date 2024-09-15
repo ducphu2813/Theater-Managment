@@ -12,4 +12,11 @@ public class MovieScheduleRepository : MongoDBRepository<MovieSchedule>, IMovieS
         
     }
     
+    //hàm thêm 1 danh sách movie schedule
+    public async Task<List<MovieSchedule>> AddListAsync(List<MovieSchedule> movieSchedules)
+    {
+        await _collection.InsertManyAsync(movieSchedules);
+        return movieSchedules;
+    }
+    
 }

@@ -21,12 +21,6 @@ public class MovieService : IMovieService
         return await _movieRepository.GetAll();
     }
 
-    //hàm này dê lấy tất cả movie, phục vụ cho bên movie schedule
-    // public async Task<List<movies>> GetAllMovieAsyncById(List<string> movieIds)
-    // {
-    //     return await _movieRepository.GetAllMovieAsyncById(movieIds);
-    // }
-
     public async Task<movies> GetByIdAsync(string id)
     {
         var movie = await _movieRepository.GetById(id);
