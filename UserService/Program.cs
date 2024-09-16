@@ -3,6 +3,8 @@ using UserService.Context;
 using UserService.Entity;
 using UserService.Repository;
 using UserService.Repository.Interface;
+using UserService.Repository.MongoDBRepo;
+using UserService.Service;
 using UserService.Service.Interface;
 
 namespace UserService;
@@ -29,17 +31,18 @@ public class Program
         builder.Services.AddSingleton<MongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
         
         //đăng ký MongoDBContext
-        builder.Services.AddSingleton<MongoDBContext>();
+        builder.Services.AddScoped<MongoDBContext>();
         
         //đăng ký các Repository
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUserDetailRepository, UserDetailRepository>();
         builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         
         //đăng ký các Service
         builder.Services.AddScoped<IUserService, Service.UserService>();
-        builder.Services.AddScoped<IUserDetailService, Service.UserDetailService>();
-        builder.Services.AddScoped<IRolePermissionService, Service.RolePermissionService>();
+        builder.Services.AddScoped<IUserDetailService, UserDetailService>();
+        builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
         
         //
         // ============================================

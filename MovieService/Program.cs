@@ -5,6 +5,7 @@ using MovieService.Entity;
 using MovieService.Repository;
 using MovieService.Repository.Interface;
 using MovieService.Repository.MongoDBRepo;
+using MovieService.Service;
 using MovieService.Service.Interface;
 
 namespace MovieService;
@@ -31,7 +32,7 @@ public class Program
         builder.Services.AddSingleton<MongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
         
         //đăng ký MongoDBContext
-        builder.Services.AddSingleton<MongoDBContext>();
+        builder.Services.AddScoped<MongoDBContext>();
         
         //đăng ký các Repository
         builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
@@ -41,8 +42,8 @@ public class Program
         
         //đăng ký các Service
         builder.Services.AddScoped<IMovieService, Service.MovieService>();
-        builder.Services.AddScoped<IMovieScheduleService, Service.MovieScheduleService>();
-        builder.Services.AddScoped<IRoomService, Service.RoomService>();
+        builder.Services.AddScoped<IMovieScheduleService, MovieScheduleService>();
+        builder.Services.AddScoped<IRoomService, RoomService>();
         
         //
         // ============================================

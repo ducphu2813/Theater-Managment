@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using PaymentService.Context;
 using PaymentService.Entity;
+using PaymentService.Repository.MongoDBRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +21,10 @@ builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("Mo
 builder.Services.AddSingleton<MongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
         
 //đăng ký MongoDBContext
-builder.Services.AddSingleton<MongoDBContext>();
+builder.Services.AddScoped<MongoDBContext>();
 
 //đăng ký các Repository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
 
 //đăng ký các Service
 
