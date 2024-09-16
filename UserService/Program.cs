@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Options;
 using UserService.Context;
 using UserService.Entity;
+using UserService.Repository;
+using UserService.Repository.Interface;
+using UserService.Service.Interface;
 
 namespace UserService;
 
@@ -29,8 +32,17 @@ public class Program
         builder.Services.AddSingleton<MongoDBContext>();
         
         //đăng ký các Repository
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IUserDetailRepository, UserDetailRepository>();
+        builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         
         //đăng ký các Service
+        builder.Services.AddScoped<IUserService, Service.UserService>();
+        builder.Services.AddScoped<IUserDetailService, Service.UserDetailService>();
+        builder.Services.AddScoped<IRolePermissionService, Service.RolePermissionService>();
+        
+        //
+        // ============================================
 
         var app = builder.Build();
 
