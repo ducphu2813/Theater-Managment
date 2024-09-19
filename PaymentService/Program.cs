@@ -31,10 +31,14 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//cấu hình swagger cho docker container
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentService v1");
+    });
 }
 
 app.UseHttpsRedirection();
