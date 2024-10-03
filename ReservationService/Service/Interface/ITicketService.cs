@@ -10,4 +10,6 @@ public interface ITicketService
     Task<Ticket> UpdateAsync(string id, Ticket ticket);
     Task<bool> RemoveAsync(string id);
     
+    //lấy danh sách vé theo id lịch chiếu
+    Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId);
 }

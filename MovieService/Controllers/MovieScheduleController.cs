@@ -22,6 +22,15 @@ public class MovieScheduleController : ControllerBase
         return Ok(result);
     }
     
+    //lấy lịch chiếu theo id phim
+    [HttpGet]
+    [Route("movie/{movieId}")]
+    public async Task<IActionResult> GetByMovieIdAsync(string movieId)
+    {
+        var result = await _movieScheduleService.GetByMovieIdAsync(movieId);
+        return Ok(result);
+    }
+    
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)

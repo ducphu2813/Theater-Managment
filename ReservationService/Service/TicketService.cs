@@ -1,4 +1,5 @@
-﻿using ReservationService.Entity.Model;
+﻿
+using ReservationService.Entity.Model;
 using ReservationService.Exceptions;
 using ReservationService.Repository.Interface;
 using ReservationService.Service.Interface;
@@ -9,15 +10,21 @@ public class TicketService : ITicketService
 {
     private readonly ITicketRepository _ticketRepository;
     
-    public TicketService(ITicketRepository ticketRepository)
+    public TicketService(
+        ITicketRepository ticketRepository)
     {
         _ticketRepository = ticketRepository;
     }
 
-
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         return await _ticketRepository.GetAll();
+    }
+    
+    //lấy danh sách vé theo id lịch chiếu
+    public async Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId)
+    {
+        return await _ticketRepository.GetByScheduleIdAsync(scheduleId);
     }
 
     public async Task<Ticket> GetByIdAsync(string id)

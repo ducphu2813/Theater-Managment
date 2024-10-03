@@ -23,6 +23,15 @@ public class TicketController : ControllerBase
         return Ok(result);
     }
     
+    //lấy danh sách vé theo id lịch chiếu
+    [HttpGet]
+    [Route("schedule/{scheduleId}")]
+    public async Task<IActionResult> GetByScheduleIdAsync(string scheduleId)
+    {
+        var result = await _ticketService.GetByScheduleIdAsync(scheduleId);
+        return Ok(result);
+    }
+    
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)

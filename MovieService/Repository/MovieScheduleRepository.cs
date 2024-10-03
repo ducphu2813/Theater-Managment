@@ -1,4 +1,5 @@
-﻿using MovieService.Context;
+﻿using MongoDB.Driver;
+using MovieService.Context;
 using MovieService.Entity.Model;
 using MovieService.Repository.Interface;
 using MovieService.Repository.MongoDBRepo;
@@ -17,6 +18,13 @@ public class MovieScheduleRepository : MongoDBRepository<MovieSchedule>, IMovieS
     {
         await _collection.InsertManyAsync(movieSchedules);
         return movieSchedules;
+    }
+    
+    // lấy lịch chiếu theo id phim
+    public async Task<List<MovieSchedule>> GetByMovieIdAsync(string movieId)
+    {
+        var filter = Builders<MovieSchedule>.Filter.Eq("MovieId", movieId);
+        return await _collection.Find(filter).ToListAsync();
     }
     
 }

@@ -7,6 +7,9 @@ using MovieService.Repository.Interface;
 using MovieService.Repository.MongoDBRepo;
 using MovieService.Service;
 using MovieService.Service.Interface;
+using MovieService.Events;
+using MovieService.Messaging;
+using MovieService.Messaging.Interface;
 
 namespace MovieService;
 
@@ -44,6 +47,16 @@ public class Program
         builder.Services.AddScoped<IMovieService, Service.MovieService>();
         builder.Services.AddScoped<IMovieScheduleService, MovieScheduleService>();
         builder.Services.AddScoped<IRoomService, RoomService>();
+        
+        
+        //đăng ký các service của Messaging Common
+        builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
+        
+        //đăng ký RabbitMQConsumer và publisher
+        builder.Services.AddSingleton<IPublisher<MovieScheduleEvent>, RabbitMQPublisher<MovieScheduleEvent>>();
+        builder.Services.AddSingleton<IConsumer<String>, RabbitMQConsumer<String>>();
+        
         
         //
         // ============================================

@@ -1,6 +1,9 @@
-﻿using MovieService.DTO;
+﻿
+using MovieService.DTO;
 using MovieService.Entity.Model;
+using MovieService.Events;
 using MovieService.Exceptions;
+using MovieService.Messaging.Interface;
 using MovieService.Repository.Interface;
 using MovieService.Service.Interface;
 
@@ -10,13 +13,16 @@ public class MovieScheduleService : IMovieScheduleService
 {
     private readonly IMovieScheduleRepository _movieScheduleRepository;
     private readonly IMovieRepository _movieRepository;
+    private readonly IPublisher<MovieScheduleEvent> _publisher;
     
     public MovieScheduleService(
         IMovieScheduleRepository movieScheduleRepository,
-        IMovieRepository movieRepository)
+        IMovieRepository movieRepository,
+        IPublisher<MovieScheduleEvent> publisher)
     {
         _movieScheduleRepository = movieScheduleRepository;
         _movieRepository = movieRepository;
+        _publisher = publisher;
     }
     
     public async Task<IEnumerable<MovieScheduleDTO>> GetAllAsync()
@@ -49,7 +55,33 @@ public class MovieScheduleService : IMovieScheduleService
         return movieScheduleDtos;
 
     }
+    
+    //lấy lịch chiếu theo id phim
+    public async Task<List<MovieScheduleDTO>> GetByMovieIdAsync(string movieId)
+    {
+        //lấy tất cả lịch chiếu theo id phim
+        var movieSchedules = await _movieScheduleRepository.GetByMovieIdAsync(movieId);
+        
+        //lấy movie từ movieId
+        var movie = await _movieRepository.GetById(movieId);
+        
+        //chuyển đổi thành DTO
+        var movieScheduleDtos = movieSchedules.Select(ms => new MovieScheduleDTO
+        {
+            Id = ms.Id,
+            Movie = movie,
+            RoomNumber = ms.RoomNumber,
+            ShowTime = ms.ShowTime,
+            SingleSeatPrice = ms.SingleSeatPrice,
+            CoupleSeatPrice = ms.CoupleSeatPrice,
+            CreatedAt = ms.CreatedAt,
+            Status = ms.Status
+        }).ToList();
+        
+        return movieScheduleDtos;
+    }
 
+    //lấy lịch chiếu theo id
     public async Task<MovieScheduleDTO> GetByIdAsync(string id)
     {
         var movieSchedule = await _movieScheduleRepository.GetById(id);
@@ -71,6 +103,14 @@ public class MovieScheduleService : IMovieScheduleService
             CreatedAt = movieSchedule.CreatedAt,
             Status = movieSchedule.Status
         };
+        
+        //gửi id lịch chiếu đến queue
+        var movieScheduleEvent = new MovieScheduleEvent
+        {
+            MovieScheduleId = movieSchedule.Id
+        };
+        
+        _publisher.Publish(movieScheduleEvent);
         
         return movieScheduleDto;
     }

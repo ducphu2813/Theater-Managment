@@ -1,10 +1,15 @@
+
 using Microsoft.Extensions.Options;
 using ReservationService.Context;
 using ReservationService.Entity;
+using ReservationService.Events;
+using ReservationService.Messaging;
+using ReservationService.Messaging.Interface;
 using ReservationService.Repository;
 using ReservationService.Repository.Interface;
 using ReservationService.Repository.MongoDBRepo;
 using ReservationService.Service;
+using ReservationService.Service.Background;
 using ReservationService.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +44,17 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
+
+//đăng ký RabbitMQ Settings
+builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
+
+//đăng ký RabbitMQConsumer và RabbitMQPublisher
+builder.Services.AddScoped<IConsumer<MovieScheduleEvent>, RabbitMQConsumer<MovieScheduleEvent>>();
+builder.Services.AddScoped(typeof(IPublisher<>), typeof(RabbitMQPublisher<>));
+
+//background service
+builder.Services.AddHostedService<MovieScheduleConsumer>();
 
 var app = builder.Build();
 
