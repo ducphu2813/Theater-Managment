@@ -31,6 +31,7 @@ public class MovieScheduleController : ControllerBase
         return Ok(result);
     }
     
+    //get by id
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)

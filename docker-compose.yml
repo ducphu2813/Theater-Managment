@@ -6,6 +6,16 @@ volumes:
 
 services:
   
+  ##############
+  #consul service
+  consul:
+    image: hashicorp/consul:latest
+    container_name: Theater.Consul
+    ports:
+      - "8500:8500"
+    networks:
+      - theater_network
+  
   #################
   #rabbitmq service
   rabbitmq:
@@ -32,6 +42,50 @@ services:
     restart: always
     networks:
       - theater_network
+      
+  ##############
+  #gateway service
+  gatewayservice:
+    build:
+      context: .
+      dockerfile: ./GatewayAPI/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5006:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+    networks:
+      - theater_network
+  
+  ##############
+  #auth service
+  authservice:
+    build:
+      context: .
+      dockerfile: ./AuthService/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5005:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+    networks:
+      - theater_network
   
   ##############
   #user service
@@ -46,9 +100,12 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+      - consul
     environment:
         - MONGO_URL=mongodb://mongo:27017
         - RabbitMQ__HostName=rabbitmq
+        - CONSUL__HOST=consul
+        - CONSUL__PORT=8500
     networks:
       - theater_network
 
@@ -65,9 +122,12 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+      - consul
     environment:
       - MONGO_URL=mongodb://mongo:27017
       - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
     networks:
       - theater_network
 
@@ -84,9 +144,12 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+      - consul
     environment:
       - MONGO_URL=mongodb://mongo:27017
       - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
     networks:
       - theater_network
 
@@ -103,11 +166,15 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+      - consul
     environment:
       - MONGO_URL=mongodb://mongo:27017
       - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
     networks:
       - theater_network
+    
 
 networks:
   theater_network:

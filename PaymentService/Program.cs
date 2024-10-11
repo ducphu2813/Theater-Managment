@@ -1,7 +1,14 @@
 using Microsoft.Extensions.Options;
 using PaymentService.Context;
 using PaymentService.Entity;
+using PaymentService.Events;
+using PaymentService.Messaging;
+using PaymentService.Messaging.Interface;
+using PaymentService.Messaging.Publisher;
+using PaymentService.Repository;
+using PaymentService.Repository.Interface;
 using PaymentService.Repository.MongoDBRepo;
+using PaymentService.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +32,17 @@ builder.Services.AddScoped<MongoDBContext>();
 
 //đăng ký các Repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 //đăng ký các Service
+builder.Services.AddScoped<IPaymentService, PaymentService.Service.PaymentService>();
+
+//đăng ký RabbitMQ Settings
+builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
+
+//đăng ký các publisher
+builder.Services.AddSingleton<IPublisher<PaymentEvent>, PaymentPublisher<PaymentEvent>>();
 
 var app = builder.Build();
 

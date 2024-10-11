@@ -6,6 +6,13 @@ public class RabbitMQSettings
     public string UserName { get; set; } = "user";
     public string Password { get; set; } = "password";
     public string ExchangeName { get; set; } = "direct_exchange";
-    public string QueueName { get; set; } = "default_queue";
-    public string RoutingKey { get; set; } = "default_routing_key";
+    
+    // Danh sách các Queue và RoutingKey
+    public List<QueueSettings> Queues { get; set; }
+}
+
+public class QueueSettings
+{
+    public string QueueName { get; set; }
+    public string RoutingKey { get; set; }
 }

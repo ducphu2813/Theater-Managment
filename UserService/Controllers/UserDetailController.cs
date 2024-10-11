@@ -31,6 +31,7 @@ public class UserDetailController : ControllerBase
         return Ok(result);
     }
     
+    //lấy detail theo userId
     [HttpGet]
     [Route("user/{userId}")]
     public async Task<IActionResult> GetByUserIdAsync(string userId)

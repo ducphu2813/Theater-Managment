@@ -6,14 +6,14 @@ using ReservationService.Messaging.Interface;
 
 namespace ReservationService.Messaging;
 
-public class RabbitMQConsumer<T> : IConsumer<T> where T : class
+public class PaymentConsumer<T> : IConsumer<T> where T : class
 {
     private readonly RabbitMQSettings _settings;
     
     private IConnection? _connection;
     private IModel? _channel;
     
-    public RabbitMQConsumer(RabbitMQSettings settings)
+    public PaymentConsumer(RabbitMQSettings settings)
     {
         _settings = settings;
         InitializeRabbitMQ();
@@ -32,7 +32,7 @@ public class RabbitMQConsumer<T> : IConsumer<T> where T : class
         _channel = _connection.CreateModel();
 
         _channel.QueueDeclare(
-            queue: _settings.QueueName,
+            queue: "payment_queue",
             durable: true,
             exclusive: false,
             autoDelete: false,
@@ -40,14 +40,14 @@ public class RabbitMQConsumer<T> : IConsumer<T> where T : class
         );
         
         _channel.ExchangeDeclare(
-            exchange: _settings.ExchangeName,
+            exchange: "payment_exchange",
             type: ExchangeType.Direct
         );
         
         _channel.QueueBind(
-            queue: _settings.QueueName,
-            exchange: _settings.ExchangeName,
-            routingKey: _settings.RoutingKey
+            queue: "payment_queue",
+            exchange: "payment_exchange",
+            routingKey: "payment_key"
         );
     }
     
@@ -75,13 +75,12 @@ public class RabbitMQConsumer<T> : IConsumer<T> where T : class
             // Do something with the message here
         };
         
-        Console.WriteLine($" [*] Waiting for messages in {_settings.QueueName}");
+        Console.WriteLine($" [*] Waiting for messages in payment_queue");
         
         _channel.BasicConsume(
-            queue: _settings.QueueName,
+            queue: "payment_queue",
             autoAck: false,  // Set autoAck to false to manually acknowledge the message after processing
             consumer: consumer
         );
     }
-    
 }

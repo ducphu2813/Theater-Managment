@@ -13,16 +13,17 @@ public class MovieScheduleService : IMovieScheduleService
 {
     private readonly IMovieScheduleRepository _movieScheduleRepository;
     private readonly IMovieRepository _movieRepository;
-    private readonly IPublisher<MovieScheduleEvent> _publisher;
+    // private readonly IPublisher<MovieScheduleEvent> _publisher;
     
     public MovieScheduleService(
         IMovieScheduleRepository movieScheduleRepository,
-        IMovieRepository movieRepository,
-        IPublisher<MovieScheduleEvent> publisher)
+        IMovieRepository movieRepository
+        // IPublisher<MovieScheduleEvent> publisher
+        )
     {
         _movieScheduleRepository = movieScheduleRepository;
         _movieRepository = movieRepository;
-        _publisher = publisher;
+        // _publisher = publisher;
     }
     
     public async Task<IEnumerable<MovieScheduleDTO>> GetAllAsync()
@@ -81,13 +82,13 @@ public class MovieScheduleService : IMovieScheduleService
         return movieScheduleDtos;
     }
 
-    //lấy lịch chiếu theo id
+    //lấy lịch chiếu theo id lịch chiếu
     public async Task<MovieScheduleDTO> GetByIdAsync(string id)
     {
         var movieSchedule = await _movieScheduleRepository.GetById(id);
         if (movieSchedule == null)
         {
-            throw new NotFoundException($"Movie with id {id} was not found.");
+            throw new NotFoundException($"Movie Schedule with id {id} was not found.");
         }
         
         var Movie = await _movieRepository.GetById(movieSchedule.MovieId);
@@ -105,12 +106,12 @@ public class MovieScheduleService : IMovieScheduleService
         };
         
         //gửi id lịch chiếu đến queue
-        var movieScheduleEvent = new MovieScheduleEvent
-        {
-            MovieScheduleId = movieSchedule.Id
-        };
-        
-        _publisher.Publish(movieScheduleEvent);
+        // var movieScheduleEvent = new MovieScheduleEvent
+        // {
+        //     MovieScheduleId = movieSchedule.Id
+        // };
+        //
+        // _publisher.Publish(movieScheduleEvent);
         
         return movieScheduleDto;
     }

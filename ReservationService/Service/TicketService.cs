@@ -1,19 +1,25 @@
 ﻿
+using System.Text.Json;
+using MongoDB.Bson.IO;
 using ReservationService.Entity.Model;
 using ReservationService.Exceptions;
 using ReservationService.Repository.Interface;
 using ReservationService.Service.Interface;
+using ReservationService.External.Model;
 
 namespace ReservationService.Service;
 
 public class TicketService : ITicketService
 {
     private readonly ITicketRepository _ticketRepository;
+    private readonly HttpClient _httpClient;
     
     public TicketService(
-        ITicketRepository ticketRepository)
+        ITicketRepository ticketRepository,
+        IHttpClientFactory httpClientFactory)
     {
         _ticketRepository = ticketRepository;
+        _httpClient = httpClientFactory.CreateClient("movie-service");
     }
 
     public async Task<IEnumerable<Ticket>> GetAllAsync()
@@ -27,7 +33,8 @@ public class TicketService : ITicketService
         return await _ticketRepository.GetByScheduleIdAsync(scheduleId);
     }
 
-    public async Task<Ticket> GetByIdAsync(string id)
+    //lấy theo id
+    public async Task<Dictionary<String, Object>> GetByIdAsync(string id)
     {
         var ticket = await _ticketRepository.GetById(id);
         
@@ -36,7 +43,28 @@ public class TicketService : ITicketService
             throw new NotFoundException($"Ticket with id {id} was not found.");
         }
         
-        return ticket;
+        Console.WriteLine(ticket.MovieScheduleId);
+        
+        //gọi api của movie service để lấy thông tin phim
+        var response = await _httpClient.GetAsync($"/api/MovieSchedule/{ticket.MovieScheduleId}");
+        
+        //cái này để chuyển từ snake_case sang camelCase
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        
+        var movieScheduleContent = await response.Content.ReadAsStringAsync();
+        var movieSchedule = JsonSerializer.Deserialize<MovieSchedule>(movieScheduleContent, options);
+        
+        Console.WriteLine(response);
+        
+        //gộp ticket và response thành 1 map để trả về
+        Dictionary<String, Object> map = new Dictionary<string, object>();
+        map.Add("ticket", ticket);
+        map.Add("movieSchedule", movieSchedule);
+        
+        return map;
     }
 
     public async Task<Ticket> AddAsync(Ticket ticket)

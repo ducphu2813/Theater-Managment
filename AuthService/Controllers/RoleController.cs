@@ -1,24 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using UserService.Entity.Model;
-using UserService.Service.Interface;
+﻿using AuthService.Entity.Model;
+using AuthService.Service.Interface;
+using Microsoft.AspNetCore.Mvc;
 
-namespace UserService.Controllers;
+namespace AuthService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class RoleController : ControllerBase
 {
-    private readonly IUserService _userService;
     
-    public UserController(IUserService userService)
+    private readonly IRoleService _roleService;
+    
+    public RoleController(IRoleService roleService)
     {
-        _userService = userService;
+        _roleService = roleService;
     }
     
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var result = await _userService.GetAllAsync();
+        var result = await _roleService.GetAllAsync();
         return Ok(result);
     }
     
@@ -26,12 +27,12 @@ public class UserController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)
     {
-        var result = await _userService.GetByIdAsync(id);
+        var result = await _roleService.GetByIdAsync(id);
         return Ok(result);
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] User user)
+    public async Task<IActionResult> AddAsync([FromBody] RolePermission role)
     {
         
         if (!ModelState.IsValid)
@@ -39,20 +40,20 @@ public class UserController : ControllerBase
             return BadRequest(ModelState);
         }
         
-        var result = await _userService.AddAsync(user);
+        var result = await _roleService.AddAsync(role);
         return Ok(result);
     }
     
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> UpdateAsync(string id, [FromBody] User user)
+    public async Task<IActionResult> UpdateAsync(string id, [FromBody] RolePermission role)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        var result = await _userService.UpdateAsync(id, user);
+        var result = await _roleService.UpdateAsync(id, role);
         return Ok(result);
     }
     
@@ -60,7 +61,7 @@ public class UserController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> RemoveAsync(string id)
     {
-        var result = await _userService.RemoveAsync(id);
+        var result = await _roleService.RemoveAsync(id);
         return Ok(result);
     }
     

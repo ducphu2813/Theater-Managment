@@ -1,5 +1,7 @@
 ﻿using PaymentService.Entity.Model;
+using PaymentService.Events;
 using PaymentService.Exceptions;
+using PaymentService.Messaging.Interface;
 using PaymentService.Repository.Interface;
 using PaymentService.Service.Interface;
 
@@ -8,10 +10,13 @@ namespace PaymentService.Service;
 public class PaymentService : IPaymentService
 {
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IPublisher<PaymentEvent> _publisher;
     
-    public PaymentService(IPaymentRepository paymentRepository)
+    public PaymentService(IPaymentRepository paymentRepository,
+        IPublisher<PaymentEvent> publisher)
     {
         _paymentRepository = paymentRepository;
+        _publisher = publisher;
     }
     
     public async Task<IEnumerable<Payment>> GetAllPaymentsAsync()
@@ -27,6 +32,13 @@ public class PaymentService : IPaymentService
         {
             throw new NotFoundException($"Payment with id {id} was not found.");
         }
+        
+        //gửi payment id đến queue
+        _publisher.Publish(new PaymentEvent
+        {
+            PaymentId = payment.Id
+        });
+        
         
         return payment;
     }

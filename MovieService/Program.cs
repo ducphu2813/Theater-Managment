@@ -10,6 +10,8 @@ using MovieService.Service.Interface;
 using MovieService.Events;
 using MovieService.Messaging;
 using MovieService.Messaging.Interface;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 namespace MovieService;
 
@@ -49,18 +51,24 @@ public class Program
         builder.Services.AddScoped<IRoomService, RoomService>();
         
         
-        //đăng ký các service của Messaging Common
+        //đăng ký rabbitMQ settings
         builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
         
-        //đăng ký RabbitMQConsumer và publisher
-        builder.Services.AddSingleton<IPublisher<MovieScheduleEvent>, RabbitMQPublisher<MovieScheduleEvent>>();
-        builder.Services.AddSingleton<IConsumer<String>, RabbitMQConsumer<String>>();
+        //đăng ký các consumer và publisher
+        // builder.Services.AddSingleton<IPublisher<MovieScheduleEvent>, RabbitMQPublisher<MovieScheduleEvent>>();
+        // builder.Services.AddSingleton<IConsumer<String>, RabbitMQConsumer<String>>();
         
         
         //
         // ============================================
         // ============================================
+        
+        //đăng ký Consul
+        builder.Services.AddServiceDiscovery(options  => options .UseConsul());
+        
+        // đăng ký HttpClient
+        // builder.Services.AddHttpClient().AddServiceDiscovery();
 
         var app = builder.Build();
 

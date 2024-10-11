@@ -11,6 +11,9 @@ using ReservationService.Repository.MongoDBRepo;
 using ReservationService.Service;
 using ReservationService.Service.Background;
 using ReservationService.Service.Interface;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,11 +53,23 @@ builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("R
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
 
 //đăng ký RabbitMQConsumer và RabbitMQPublisher
-builder.Services.AddScoped<IConsumer<MovieScheduleEvent>, RabbitMQConsumer<MovieScheduleEvent>>();
-builder.Services.AddScoped(typeof(IPublisher<>), typeof(RabbitMQPublisher<>));
+// builder.Services.AddScoped<IConsumer<MovieScheduleEvent>, MovieScheduleConsumer<MovieScheduleEvent>>();
+// builder.Services.AddScoped<IConsumer<PaymentEvent>, PaymentConsumer<PaymentEvent>>();
+// builder.Services.AddScoped(typeof(IPublisher<>), typeof(RabbitMQPublisher<>));
 
 //background service
-builder.Services.AddHostedService<MovieScheduleConsumer>();
+// builder.Services.AddHostedService<ScheduleConsumerService>();
+// builder.Services.AddHostedService<PaymentConsumerService>();
+
+//đăng ký Consul
+builder.Services.AddServiceDiscovery(options => options.UseConsul());
+
+//đăng ký các uri của các service khác
+builder.Services.AddHttpClient("movie-service", client =>
+{
+    client.BaseAddress = new Uri("http://movie-service"); // Đây chỉ là base URL
+}).AddServiceDiscovery();
+
 
 var app = builder.Build();
 

@@ -5,11 +5,11 @@ using ReservationService.Messaging.Interface;
 
 namespace ReservationService.Service.Background;
 
-public class MovieScheduleConsumer : BackgroundService
+public class ScheduleConsumerService : BackgroundService
 {
     private readonly IConsumer<MovieScheduleEvent> _consumer;
     
-    public MovieScheduleConsumer(IConsumer<MovieScheduleEvent> consumer)
+    public ScheduleConsumerService(IConsumer<MovieScheduleEvent> consumer)
     {
         _consumer = consumer;
     }
@@ -18,15 +18,21 @@ public class MovieScheduleConsumer : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            _consumer.Consume(async (message) =>
+            
+            // Chỉ gọi consume một lần khi service khởi chạy
+            _consumer.Consume(onMessage: async (message) =>
             {
                 // In message ra console để kiểm tra
                 Console.WriteLine($"Received MovieScheduleId: {message.MovieScheduleId}");
                 await Task.CompletedTask;
             });
             
-            // Thêm một khoảng thời gian chờ ngắn để không làm quá tải CPU
-            await Task.Delay(1000, stoppingToken);
+            // Vòng lặp này chỉ để giữ cho background service tiếp tục chạy
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                // Chờ 1 giây để tránh quá tải CPU
+                await Task.Delay(1000, stoppingToken);
+            }
         }
     }
 }

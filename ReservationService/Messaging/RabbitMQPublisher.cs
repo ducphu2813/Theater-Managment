@@ -31,7 +31,7 @@ public class RabbitMQPublisher<T> : IPublisher<T> where T : class
         _channel = _connection.CreateModel();
 
         _channel.QueueDeclare(
-            queue: _settings.QueueName,
+            queue: "movie_schedule_queue",
             durable: true,
             exclusive: false,
             autoDelete: false,
@@ -44,9 +44,9 @@ public class RabbitMQPublisher<T> : IPublisher<T> where T : class
         );
         
         _channel.QueueBind(
-            queue: _settings.QueueName,
+            queue: "movie_schedule_queue",
             exchange: _settings.ExchangeName,
-            routingKey: _settings.RoutingKey
+            routingKey: "movie_schedule_key"
         );
     }
     
@@ -57,7 +57,7 @@ public class RabbitMQPublisher<T> : IPublisher<T> where T : class
 
         _channel.BasicPublish(
             exchange: _settings.ExchangeName,
-            routingKey: _settings.RoutingKey,
+            routingKey: "movie_schedule_key",
             basicProperties: null,
             body: body
         );
