@@ -47,13 +47,13 @@ public class MovieScheduleController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPost]
-    [Route("list")]
-    public async Task<IActionResult> AddListAsync([FromBody] List<SaveMovieScheduleDTO> movieScheduleDtos)
-    {
-        var result = await _movieScheduleService.AddListAsync(movieScheduleDtos);
-        return Ok(result);
-    }
+    // [HttpPost]
+    // [Route("list")]
+    // public async Task<IActionResult> AddListAsync([FromBody] List<SaveMovieScheduleDTO> movieScheduleDtos)
+    // {
+    //     var result = await _movieScheduleService.AddListAsync(movieScheduleDtos);
+    //     return Ok(result);
+    // }
     
     [HttpPut]
     [Route("{id}")]

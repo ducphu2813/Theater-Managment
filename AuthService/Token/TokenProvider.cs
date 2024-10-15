@@ -25,10 +25,10 @@ public class TokenProvider(IConfiguration configuration)
         };
         
         //thêm danh sách roles vào claims
-        // if (user.Roles != null)
-        // {
-        //     claims.AddRange(user.Roles.Select(role => new Claim("roles", role)));
-        // }
+        if (user.Roles != null)
+        {
+            claims.AddRange(user.Roles.Select(role => new Claim("roles", role)));
+        }
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {

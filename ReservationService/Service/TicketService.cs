@@ -1,6 +1,7 @@
 ﻿
 using System.Text.Json;
 using MongoDB.Bson.IO;
+using ReservationService.DTO;
 using ReservationService.Entity.Model;
 using ReservationService.Exceptions;
 using ReservationService.Repository.Interface;
@@ -12,14 +13,17 @@ namespace ReservationService.Service;
 public class TicketService : ITicketService
 {
     private readonly ITicketRepository _ticketRepository;
+    private readonly ISeatRepository _seatRepository;
     private readonly HttpClient _httpClient;
     
     public TicketService(
         ITicketRepository ticketRepository,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        ISeatRepository seatRepository)
     {
         _ticketRepository = ticketRepository;
         _httpClient = httpClientFactory.CreateClient("movie-service");
+        _seatRepository = seatRepository;
     }
 
     public async Task<IEnumerable<Ticket>> GetAllAsync()
@@ -57,7 +61,7 @@ public class TicketService : ITicketService
         var movieScheduleContent = await response.Content.ReadAsStringAsync();
         var movieSchedule = JsonSerializer.Deserialize<MovieSchedule>(movieScheduleContent, options);
         
-        Console.WriteLine(response);
+        // Console.WriteLine(response);
         
         //gộp ticket và response thành 1 map để trả về
         Dictionary<String, Object> map = new Dictionary<string, object>();
@@ -95,5 +99,28 @@ public class TicketService : ITicketService
         }
         
         return await _ticketRepository.Remove(id);
+    }
+    
+    //hàm lấy tất cả SeatDetail theo id lịch chiếu
+    public async Task<Dictionary<String, Object>> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber){
+        
+        Dictionary<String, Object> map = new Dictionary<string, object>();
+        
+        Console.WriteLine("id lich chieu truyen vao: "+scheduleId);
+        
+        //lấy tất cả vé theo id lịch chiếu
+        var tickets = await _ticketRepository.GetByScheduleIdAsync(scheduleId);
+        
+        //lấy tất cả ghế đã đặt
+        var seatDetails = tickets.SelectMany(t => t.SeatDetail).ToList();
+        
+        //lấy tất cả danh sách ghế trong room theo room number
+        var seats = await _seatRepository.GetByRoomNumberAsync(roomNumber);
+        
+        map.Add("allSeats", seats);
+        map.Add("bookedSeat", seatDetails);
+        
+        return map;
+        
     }
 }

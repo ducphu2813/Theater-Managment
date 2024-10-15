@@ -67,7 +67,7 @@ builder.Services.AddServiceDiscovery(options => options.UseConsul());
 //đăng ký các uri của các service khác
 builder.Services.AddHttpClient("movie-service", client =>
 {
-    client.BaseAddress = new Uri("http://movie-service"); // Đây chỉ là base URL
+    client.BaseAddress = new Uri("http://movie-service"); // Đây chỉ là base URL dựa trên ServiceName được đăng ký ở Consul
 }).AddServiceDiscovery();
 
 

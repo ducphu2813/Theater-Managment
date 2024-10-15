@@ -73,4 +73,14 @@ public class TicketController : ControllerBase
         var result = await _ticketService.RemoveAsync(id);
         return Ok(result);
     }
+    
+    //lấy tất cả seat trong room và lấy seatdetail theo schedule id
+    [HttpGet]
+    [Route("schedule/{scheduleId}/seat/{roomNumber}")]
+    public async Task<IActionResult> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber)
+    {
+        var result = await _ticketService.GetAllBookedSeatByScheduleIdAsync(scheduleId, roomNumber);
+        return Ok(result);
+    }
+    
 }

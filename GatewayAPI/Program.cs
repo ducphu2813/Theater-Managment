@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -21,8 +22,19 @@ public class Program
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         
+        //thêm các authorization policy tùy chỉnh
+        
+        //policy cho MANAGER và ADMIN
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("ManagerAdminPolicy", policy =>
+                policy
+                    .RequireAuthenticatedUser()
+                    .RequireClaim(builder.Configuration["Jwt:RoleClaimType"], "MANAGER", "ADMIN"));
+        });
+        
         //thêm phần xác thực jwt
-        builder.Services.AddAuthorization();
+        // builder.Services.AddAuthorization();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
@@ -33,7 +45,29 @@ public class Program
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)), //thực hiện xác thực secret key
                     ValidIssuer = builder.Configuration["Jwt:Issuer"], //thực hiện xác thực Issuer
                     ValidAudience = builder.Configuration["Jwt:Audience"], //thực hiện xác thực Audience
-                    ClockSkew = TimeSpan.Zero //thời gian hết hạn của token
+                    ClockSkew = TimeSpan.Zero, //thời gian hết hạn của token
+                    RoleClaimType = "roles"
+                };
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // Disable claim type mapping
+                o.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // In ra các claim từ JWT sau khi xác thực thành công
+                        var claims = context.Principal.Claims;
+                        foreach (var claim in claims)
+                        {
+                            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        // In ra lỗi khi xác thực JWT thất bại
+                        Console.WriteLine("JWT Authentication Failed");
+                        Console.WriteLine(context.Exception.ToString());
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

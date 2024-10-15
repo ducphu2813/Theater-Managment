@@ -1,4 +1,5 @@
-﻿using ReservationService.Entity.Model;
+﻿using ReservationService.DTO;
+using ReservationService.Entity.Model;
 
 namespace ReservationService.Service.Interface;
 
@@ -12,4 +13,7 @@ public interface ITicketService
     
     //lấy danh sách vé theo id lịch chiếu
     Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId);
+    
+    //lấy tất cả SeatDetail theo id lịch chiếu
+    Task<Dictionary<String, Object>> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber);
 }

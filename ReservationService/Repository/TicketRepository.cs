@@ -15,7 +15,7 @@ public class TicketRepository : MongoDBRepository<Ticket>, ITicketRepository
     //lấy danh sách vé theo id lịch chiếu
     public async Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId)
     {
-        var filter = Builders<Ticket>.Filter.Eq("ScheduleId", scheduleId);
+        var filter = Builders<Ticket>.Filter.Eq("MovieScheduleId", scheduleId);
         return await _collection.Find(filter).ToListAsync();
     }
     

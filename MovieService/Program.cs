@@ -1,5 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-
+using Microsoft.IdentityModel.Tokens;
 using MovieService.Context;
 using MovieService.Entity;
 using MovieService.Repository;
@@ -10,6 +12,7 @@ using MovieService.Service.Interface;
 using MovieService.Events;
 using MovieService.Messaging;
 using MovieService.Messaging.Interface;
+using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 
@@ -67,6 +70,28 @@ public class Program
         //đăng ký Consul
         builder.Services.AddServiceDiscovery(options  => options .UseConsul());
         
+        //đăng ký reservation service
+        builder.Services.AddHttpClient("reservation-service", client =>
+        {
+            client.BaseAddress = new Uri("http://reservation-service"); // Đây chỉ là base URL dựa trên ServiceName được đăng ký ở Consul
+        }).AddServiceDiscovery();
+        
+        // Add Authentication
+        // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //     .AddJwtBearer(options =>
+        //     {
+        //         options.TokenValidationParameters = new TokenValidationParameters
+        //         {
+        //             ValidateIssuer = true,
+        //             ValidateAudience = true,
+        //             ValidateLifetime = true,
+        //             ValidateIssuerSigningKey = true,
+        //             ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        //             ValidAudience = builder.Configuration["Jwt:Audience"],
+        //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        //         };
+        //     });
+        
         // đăng ký HttpClient
         // builder.Services.AddHttpClient().AddServiceDiscovery();
 
@@ -84,6 +109,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        // app.UseAuthentication(); // phần xác thực
+        
         app.UseAuthorization();
 
 
