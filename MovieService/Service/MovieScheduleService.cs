@@ -142,9 +142,51 @@ public class MovieScheduleService : IMovieScheduleService
 
     public async Task<List<MovieSchedule>> AddAsync(SaveMovieScheduleDTO movieScheduleDto)
     {
-        //Note cái sẽ làm:
-        //1. Kiểm tra xem phim có tồn tại không
-        //2. Kiểm tra phòng và giờ chiếu có hợp lệ không
+        
+        //lấy movie từ movieId
+        var movie = await _movieRepository.GetById(movieScheduleDto.MovieId);
+        
+        if (movie == null)
+        {
+            throw new NotFoundException($"Movie with id {movieScheduleDto.MovieId} was not found.");
+        }
+        
+        //kiểm tra phòng và giờ chiếu có bị đụng giờ không
+        
+        //lấy danh sách số phòng trong lịch chiếu
+        var roomNumbers = movieScheduleDto.ScheduleDetails.Select(ms => ms.RoomNumber).ToList();
+        //tìm tất cả list lịch chiếu theo số phòng
+        var allMovieSchedules = await _movieScheduleRepository.GetByRoomNumbersAsync(roomNumbers);
+        
+        Console.WriteLine("Tất cả lịch chiếu tìm được: " + allMovieSchedules);
+        
+        //sau đó kiểm tra theo số phòng và giờ chiếu, đảm bảo trong vòng 3 tiếng không có 2 lịch chiếu cùng phòng
+        //
+        if (allMovieSchedules != null)
+        {
+            Console.WriteLine("Oke có lịch chiếu ở phòng "+ roomNumbers);
+            //lặp qua tất cả lịch chiếu được thêm vào
+            foreach (var scheduleDetail in movieScheduleDto.ScheduleDetails)
+            {
+                //chổ này để test DateTime của C#
+                // Console.WriteLine("Kiểm tra lịch chiếu: " + scheduleDetail.ShowTime);
+                // Console.WriteLine("Value Lịch chiếu là: " + scheduleDetail.ShowTime.Value);
+                // DateTime testShowTime = new DateTime(2024, 11, 13, 03, 00, 00);;
+                // testShowTime = testShowTime.AddHours(2);
+                // Console.WriteLine("Thử lấy giờ cộng thêm 2 tiếng: " + testShowTime);
+                // Console.WriteLine("Trừ 2 cái coi ra cái gì: " + Math.Abs((scheduleDetail.ShowTime - testShowTime).Value.TotalSeconds) );
+                
+                var isConflict = allMovieSchedules.Any(ms =>
+                    ms.RoomNumber == scheduleDetail.RoomNumber &&
+                    Math.Abs((ms.ShowTime - scheduleDetail.ShowTime).Value.TotalSeconds) < 10800);
+                
+                if (isConflict)
+                {
+                    throw new InvalidOperationException($"Room {scheduleDetail.RoomNumber} has a schedule conflict with {scheduleDetail.ShowTime}");
+                }
+            }   
+        }
+        
         var movieSchedule = movieScheduleDto.ScheduleDetails.Select(ms => new MovieSchedule
         {
             MovieId = movieScheduleDto.MovieId,
@@ -156,8 +198,8 @@ public class MovieScheduleService : IMovieScheduleService
             Status = ms.Status
         }).ToList();
         
-        var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
-        return addedMovieSchedule;
+        // var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
+        return movieSchedule;
     }
     
     // public async Task<List<MovieSchedule>> AddListAsync(List<SaveMovieScheduleDTO> movieScheduleDtos)

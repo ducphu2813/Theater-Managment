@@ -23,7 +23,14 @@ public class MovieScheduleRepository : MongoDBRepository<MovieSchedule>, IMovieS
     // lấy lịch chiếu theo id phim
     public async Task<List<MovieSchedule>> GetByMovieIdAsync(string movieId)
     {
-        var filter = Builders<MovieSchedule>.Filter.Eq("MovieId", movieId);
+        var filter = Builders<MovieSchedule>.Filter.Eq("MovieId", movieId); //Filter.Eq để tìm theo 1 giá trị
+        return await _collection.Find(filter).ToListAsync();
+    }
+    
+    //lấy các lịch chiếu theo danh sách số phòng
+    public async Task<List<MovieSchedule>> GetByRoomNumbersAsync(List<string> roomNumbers)
+    {
+        var filter = Builders<MovieSchedule>.Filter.In("RoomNumber", roomNumbers); //Filter.In để tìm theo 1 danh sách giá trị
         return await _collection.Find(filter).ToListAsync();
     }
     
