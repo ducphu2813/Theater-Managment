@@ -5,6 +5,7 @@ using ReservationService.Entity;
 using ReservationService.Events;
 using ReservationService.Messaging;
 using ReservationService.Messaging.Interface;
+using ReservationService.Middleware;
 using ReservationService.Repository;
 using ReservationService.Repository.Interface;
 using ReservationService.Repository.MongoDBRepo;
@@ -82,6 +83,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReservationService v1");
     });
 }
+//đăng ký middleware xử lý lỗi
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using ReservationService.DTO;
 
 namespace ReservationService.Entity.Model;
 
@@ -12,12 +11,14 @@ public class Ticket
     public string? Id { get; set; }
     
     public string? MovieScheduleId { get; set; }
-    public string? RoomNumber { get; set; }
-    public List<SeatDetailDTO>? SeatDetail  { get; set; }
+    public List<string>? SeatId { get; set; }
+    public List<Seat>? SeatDetail  { get; set; }
+    public List<string>? FoodId { get; set; }
+    public List<Food>? FoodDetail { get; set; }
     public int TotalTicket { get; set; }
-    public List<FoodDetailDTO>? FoodDetail { get; set; }
     public int TotalPrice { get; set; }
-    public List<DiscountDetailDTO>? DiscountDetail { get; set; }
+    public string? DiscountId { get; set; }
+    public Discount? DiscountDetail { get; set; }
     public string? UserId { get; set; }
     public string? Status { get; set; }
     public DateTime CreatedAt { get; set; }

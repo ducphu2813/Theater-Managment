@@ -19,4 +19,11 @@ public class SeatRepository : MongoDBRepository<Seat>, ISeatRepository
         return await _collection.Find(filter).ToListAsync();
     }
     
+    //hàm lấy danh sách Seat theo danh sách id
+    public async Task<List<Seat>> GetByIdsAsync(List<string> ids)
+    {
+        var filter = Builders<Seat>.Filter.In("Id", ids);
+        return await _collection.Find(filter).ToListAsync();
+    }
+    
 }

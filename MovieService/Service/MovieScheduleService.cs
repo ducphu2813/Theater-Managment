@@ -139,6 +139,28 @@ public class MovieScheduleService : IMovieScheduleService
         
         return map;
     }
+    
+    //cũng là hàm lây theo schedule id nhưng để bên reservation dùng khi bên đó gọi get 1 ticket
+    public async Task<MovieScheduleDTO> GetByScheduleIdAsync(string scheduleId)
+    {
+        var movieSchedule = await _movieScheduleRepository.GetById(scheduleId);
+        
+        var Movie = await _movieRepository.GetById(movieSchedule.MovieId);
+        
+        var movieScheduleDto = new MovieScheduleDTO
+        {
+            Id = movieSchedule.Id,
+            Movie = Movie,
+            RoomNumber = movieSchedule.RoomNumber,
+            ShowTime = movieSchedule.ShowTime,
+            SingleSeatPrice = movieSchedule.SingleSeatPrice,
+            CoupleSeatPrice = movieSchedule.CoupleSeatPrice,
+            CreatedAt = movieSchedule.CreatedAt,
+            Status = movieSchedule.Status
+        };
+        
+        return movieScheduleDto;
+    }
 
     public async Task<List<MovieSchedule>> AddAsync(SaveMovieScheduleDTO movieScheduleDto)
     {
@@ -152,10 +174,12 @@ public class MovieScheduleService : IMovieScheduleService
         }
         
         //kiểm tra phòng và giờ chiếu có bị đụng giờ không
+        //Note
+        //1. Lấy tất cả lịch chiếu theo số phòng và những ngày cần tìm
         
         //lấy danh sách số phòng trong lịch chiếu
         var roomNumbers = movieScheduleDto.ScheduleDetails.Select(ms => ms.RoomNumber).ToList();
-        //tìm tất cả list lịch chiếu theo số phòng
+        //tìm tất cả list lịch chiếu theo số phòng //Note 1.
         var allMovieSchedules = await _movieScheduleRepository.GetByRoomNumbersAsync(roomNumbers);
         
         Console.WriteLine("Tất cả lịch chiếu tìm được: " + allMovieSchedules);

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using GatewayAPI.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,9 +33,9 @@ public class Program
                     .RequireAuthenticatedUser()
                     .RequireClaim(builder.Configuration["Jwt:RoleClaimType"], "MANAGER", "ADMIN"));
         });
-        
-        //thêm phần xác thực jwt
+
         // builder.Services.AddAuthorization();
+        //thêm phần xác thực jwt
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
@@ -63,6 +64,20 @@ public class Program
                     },
                     OnAuthenticationFailed = context =>
                     {
+                        
+                        // Ghi log lỗi JWT hết hạn
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            Console.WriteLine("JWT Token expired");
+                    
+                            // Trả về lỗi 401 Unauthorized khi JWT hết hạn
+                            context.Response.StatusCode = 401;
+                            context.Response.ContentType = "application/json";
+                            return context.Response.WriteAsync(new {
+                                message = "Token expired"
+                            }.ToString());
+                        }
+                        
                         // In ra lỗi khi xác thực JWT thất bại
                         Console.WriteLine("JWT Authentication Failed");
                         Console.WriteLine(context.Exception.ToString());
@@ -84,6 +99,9 @@ public class Program
 
         //thêm authentication
         app.UseAuthentication();
+        
+        //đăng ký middleware gắn userId vào request body
+        app.UseMiddleware<UserIdInjectionMiddleware>();
         
         app.UseAuthorization();
 

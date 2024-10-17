@@ -19,4 +19,20 @@ public class TicketRepository : MongoDBRepository<Ticket>, ITicketRepository
         return await _collection.Find(filter).ToListAsync();
     }
     
+    //hàm xóa tất cả vé
+    public async Task<bool> RemoveAllAsync()
+    {
+        await _collection.DeleteManyAsync(Builders<Ticket>.Filter.Empty);
+        return true;
+    }
+    
+    //hàm tìm bằng schelude id và seat id
+    public async Task<List<Ticket>> GetByScheduleIdAndSeatIdAsync(string scheduleId, List<string> seatIds)
+    {
+        var filter = Builders<Ticket>.Filter.Eq("MovieScheduleId", scheduleId) &
+                     Builders<Ticket>.Filter.In("SeatId", seatIds);
+        
+        return await _collection.Find(filter).ToListAsync();
+    }
+    
 }

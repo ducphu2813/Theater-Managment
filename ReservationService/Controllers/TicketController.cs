@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReservationService.DTO;
 using ReservationService.Entity.Model;
 using ReservationService.Service.Interface;
 
@@ -41,7 +42,7 @@ public class TicketController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] Ticket ticket)
+    public async Task<IActionResult> AddAsync([FromBody] SaveTicketDTO ticket)
     {
         
         if (!ModelState.IsValid)
@@ -55,7 +56,7 @@ public class TicketController : ControllerBase
     
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> UpdateAsync(string id, [FromBody] Ticket ticket)
+    public async Task<IActionResult> UpdateAsync(string id, [FromBody] UpdateTicketDTO ticket)
     {
         if (!ModelState.IsValid)
         {
@@ -74,7 +75,17 @@ public class TicketController : ControllerBase
         return Ok(result);
     }
     
+    //hàm xóa tất cả vé
+    [HttpDelete]
+    [Route("removeAll")]
+    public async Task<IActionResult> RemoveAllAsync()
+    {
+        var result = await _ticketService.RemoveAllAsync();
+        return Ok(result);
+    }
+    
     //lấy tất cả seat trong room và lấy seatdetail theo schedule id
+    //cái này dành cho bên movie service khi user muốn đặt mua vé
     [HttpGet]
     [Route("schedule/{scheduleId}/seat/{roomNumber}")]
     public async Task<IActionResult> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber)

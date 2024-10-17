@@ -12,6 +12,7 @@ using MovieService.Service.Interface;
 using MovieService.Events;
 using MovieService.Messaging;
 using MovieService.Messaging.Interface;
+using MovieService.Middleware;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -106,6 +107,9 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieService v1");
             });
         }
+        
+        //đăng ký middleware xử lý lỗi
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.UseHttpsRedirection();
 

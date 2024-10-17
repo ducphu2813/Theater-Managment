@@ -17,5 +17,8 @@ public interface IMovieScheduleService
     //hàm lấy lịch chiếu theo id phim
     Task<List<MovieScheduleDTO>> GetByMovieIdAsync(string movieId);
     
+    //hàm lấy lịch chiếu theo id lịch chiếu cho bên reservation
+    Task<MovieScheduleDTO> GetByScheduleIdAsync(string scheduleId);
+
     //hàm kiểm tra phòng và lịch chiếu có hợp lệ không(truyền vào số phòng và ngày chiếu)
 }

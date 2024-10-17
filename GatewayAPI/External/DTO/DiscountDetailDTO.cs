@@ -1,4 +1,4 @@
-﻿namespace ReservationService.DTO;
+﻿namespace GatewayAPI.External.DTO;
 
 public class DiscountDetailDTO
 {
