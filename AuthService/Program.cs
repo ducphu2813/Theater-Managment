@@ -58,7 +58,7 @@ public class Program
         //                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)), //thực hiện xác thực secret key
         //             ValidIssuer = builder.Configuration["Jwt:Issuer"], //thực hiện xác thực Issuer
         //             ValidAudience = builder.Configuration["Jwt:Audience"], //thực hiện xác thực Audience
-        //             ClockSkew = TimeSpan.Zero //thời gian hết hạn của token
+        //             ClockSkew = TimeSpan.Zero //xác thực thời gian hết hạn của token
         //         };
         //     });
 

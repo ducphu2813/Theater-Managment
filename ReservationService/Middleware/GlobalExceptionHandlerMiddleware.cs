@@ -1,4 +1,6 @@
-﻿namespace ReservationService.Middleware;
+﻿using MongoDB.Bson;
+
+namespace ReservationService.Middleware;
 
 public class GlobalExceptionHandlerMiddleware
 {
@@ -35,7 +37,7 @@ public class GlobalExceptionHandlerMiddleware
         else
         {
             statusCode = StatusCodes.Status500InternalServerError; // lỗi mặc định là 500
-            message = "An unexpected error occurred.";
+            message = exception.Message; // trả về thông báo lỗi mặc định
         }
 
         context.Response.ContentType = "application/json";
@@ -46,6 +48,6 @@ public class GlobalExceptionHandlerMiddleware
         {
             StatusCode = statusCode,
             Message = message
-        }.ToString());
+        }.ToJson());
     }
 }

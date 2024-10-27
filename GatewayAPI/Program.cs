@@ -19,12 +19,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         
-        // Add Reverse Proxy services
+        // thêm reverse proxy vào project
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         
         //thêm các authorization policy tùy chỉnh
-        
         //policy cho MANAGER và ADMIN
         builder.Services.AddAuthorization(options =>
         {
@@ -65,7 +64,7 @@ public class Program
                     OnAuthenticationFailed = context =>
                     {
                         
-                        // Ghi log lỗi JWT hết hạn
+                        // ghi ra console
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
                             Console.WriteLine("JWT Token expired");
@@ -73,15 +72,18 @@ public class Program
                             // Trả về lỗi 401 Unauthorized khi JWT hết hạn
                             context.Response.StatusCode = 401;
                             context.Response.ContentType = "application/json";
-                            return context.Response.WriteAsync(new {
+                            return context.Response.WriteAsJsonAsync(new {
                                 message = "Token expired"
                             }.ToString());
                         }
                         
-                        // In ra lỗi khi xác thực JWT thất bại
+                        // ghi ra console
                         Console.WriteLine("JWT Authentication Failed");
                         Console.WriteLine(context.Exception.ToString());
-                        return Task.CompletedTask;
+                        return context.Response.WriteAsJsonAsync(new
+                        {
+                            message = "Invalid token"
+                        }.ToString());
                     }
                 };
             });

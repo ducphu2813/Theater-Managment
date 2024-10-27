@@ -26,8 +26,8 @@ public class UserIdInjectionMiddleware
         
         if (context.User.Identity.IsAuthenticated)
         {
-            // Kiểm tra nếu là POST request và có body
-            if (context.Request.Method == "POST" && context.Request.ContentType.Contains("application/json"))
+            // Kiểm tra nếu là POST request hoặc PUT request và có body
+            if ((context.Request.Method == "POST" || context.Request.Method == "PUT") && context.Request.ContentType.Contains("application/json"))
             {
                 // Đọc request body
                 context.Request.EnableBuffering();

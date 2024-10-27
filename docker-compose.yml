@@ -72,7 +72,7 @@ services:
       context: .
       dockerfile: ./AuthService/Dockerfile
     volumes:
-      - nuget_cache:/root/.nuget/packages
+      - nuget_cache:/root/.nuget/packages # sử dụng cache để tăng tốc độ build
     ports:
       - "5005:8080"
     depends_on:
@@ -163,6 +163,28 @@ services:
       - nuget_cache:/root/.nuget/packages
     ports:
       - "5004:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+    networks:
+      - theater_network
+  
+  ##############
+  #admin service
+  adminservice:
+    build:
+      context: .
+      dockerfile: ./AdminService/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5007:8080"
     depends_on:
       - mongo
       - rabbitmq

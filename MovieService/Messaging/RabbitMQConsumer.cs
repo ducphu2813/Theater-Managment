@@ -62,7 +62,7 @@ public class RabbitMQConsumer<T> : IConsumer<T> where T : class
             
             if (message != null)
             {
-                // Gọi callback để xử lý message
+                // gọi callback để xử lý message
                 await onMessage(message);
             }
             

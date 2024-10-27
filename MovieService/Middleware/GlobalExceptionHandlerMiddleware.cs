@@ -23,7 +23,7 @@ public class GlobalExceptionHandlerMiddleware
     
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        // Cấu hình mã lỗi và thông báo dựa trên loại ngoại lệ
+        // cấu hình mã lỗi và thông báo dựa trên loại ngoại lệ
         int statusCode;
         string message;
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandlerMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
 
-        // Trả về response JSON chứa thông tin lỗi
+        // trả về response json chứa thông tin lỗi
         return context.Response.WriteAsync(new
         {
             StatusCode = statusCode,

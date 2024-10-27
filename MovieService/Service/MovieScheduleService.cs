@@ -140,7 +140,7 @@ public class MovieScheduleService : IMovieScheduleService
         return map;
     }
     
-    //cũng là hàm lây theo schedule id nhưng để bên reservation dùng khi bên đó gọi get 1 ticket
+    //cũng là hàm lấy theo schedule id nhưng để bên reservation dùng khi bên đó gọi get 1 ticket
     public async Task<MovieScheduleDTO> GetByScheduleIdAsync(string scheduleId)
     {
         var movieSchedule = await _movieScheduleRepository.GetById(scheduleId);
@@ -222,7 +222,7 @@ public class MovieScheduleService : IMovieScheduleService
             Status = ms.Status
         }).ToList();
         
-        // var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
+        var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
         return movieSchedule;
     }
     
@@ -272,7 +272,7 @@ public class MovieScheduleService : IMovieScheduleService
                 {
                     if (newValue is string strValue && string.IsNullOrEmpty(strValue)) continue;
                     
-                    // Đảm bảo rằng giá trị mới khác giá trị hiện tại trước khi cập nhật
+                    // đảm bảo rằng giá trị mới khác giá trị hiện tại trước khi cập nhật
                     var currentValue = movieScheduleProperty.GetValue(movieScheduleToUpdate);
                     if (!newValue.Equals(currentValue))
                     {

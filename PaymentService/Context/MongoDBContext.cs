@@ -5,6 +5,7 @@ namespace PaymentService.Context;
 
 public class MongoDBContext
 {
+    //inject MongoDBSettings từ appsettings.json
     private readonly IMongoDatabase _database;
     
     public MongoDBContext(MongoDBSettings settings)

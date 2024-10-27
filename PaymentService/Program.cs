@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using PaymentService.Context;
 using PaymentService.Entity;
@@ -5,10 +8,15 @@ using PaymentService.Events;
 using PaymentService.Messaging;
 using PaymentService.Messaging.Interface;
 using PaymentService.Messaging.Publisher;
+using PaymentService.Middleware;
 using PaymentService.Repository;
 using PaymentService.Repository.Interface;
 using PaymentService.Repository.MongoDBRepo;
+using PaymentService.Service;
 using PaymentService.Service.Interface;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +44,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 //đăng ký các Service
 builder.Services.AddScoped<IPaymentService, PaymentService.Service.PaymentService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 //đăng ký RabbitMQ Settings
 builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
@@ -43,6 +52,19 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSetti
 
 //đăng ký các publisher
 builder.Services.AddSingleton<IPublisher<PaymentEvent>, PaymentPublisher<PaymentEvent>>();
+
+// đăng ký IUrlHelperFactory and IActionContextAccessor
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+
+//đăng ký Consul
+builder.Services.AddServiceDiscovery(options => options.UseConsul());
+
+//đăng ký các uri của các service khác
+builder.Services.AddHttpClient("reservation-service", client =>
+{
+    client.BaseAddress = new Uri("http://reservation-service"); // đây chỉ là base URL dựa trên ServiceName được đăng ký ở Consul
+}).AddServiceDiscovery();
 
 var app = builder.Build();
 
@@ -56,6 +78,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentService v1");
     });
 }
+//đăng ký middleware xử lý lỗi
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

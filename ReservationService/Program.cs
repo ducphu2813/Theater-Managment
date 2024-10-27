@@ -4,7 +4,9 @@ using ReservationService.Context;
 using ReservationService.Entity;
 using ReservationService.Events;
 using ReservationService.Messaging;
+using ReservationService.Messaging.Consumer;
 using ReservationService.Messaging.Interface;
+using ReservationService.Messaging.Publisher;
 using ReservationService.Middleware;
 using ReservationService.Repository;
 using ReservationService.Repository.Interface;
@@ -53,14 +55,17 @@ builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQSettings"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
 
-//đăng ký RabbitMQConsumer và RabbitMQPublisher
+//đăng ký Consumer
 // builder.Services.AddScoped<IConsumer<MovieScheduleEvent>, MovieScheduleConsumer<MovieScheduleEvent>>();
-// builder.Services.AddScoped<IConsumer<PaymentEvent>, PaymentConsumer<PaymentEvent>>();
-// builder.Services.AddScoped(typeof(IPublisher<>), typeof(RabbitMQPublisher<>));
+builder.Services.AddScoped<IConsumer<PaymentEvent>, PaymentConsumer<PaymentEvent>>();
+
+//đăng ký Publisher
+builder.Services.AddScoped(typeof(IPublisher<>), typeof(RabbitMQPublisher<>));
+builder.Services.AddScoped<IPublisher<AdminEvent>, ProcessedTicketPublisher<AdminEvent>>();
 
 //background service
 // builder.Services.AddHostedService<ScheduleConsumerService>();
-// builder.Services.AddHostedService<PaymentConsumerService>();
+builder.Services.AddHostedService<PaymentConsumerService>();
 
 //đăng ký Consul
 builder.Services.AddServiceDiscovery(options => options.UseConsul());

@@ -75,7 +75,7 @@ public class MovieService : IMovieService
                 {
                     if (newValue is string strValue && string.IsNullOrEmpty(strValue)) continue;
                 
-                    // Đảm bảo giá trị mới không bằng giá trị hiện tại trước khi cập nhật
+                    // đảm bảo giá trị mới không bằng giá trị hiện tại trước khi cập nhật
                     var currentValue = movieProperty.GetValue(movie);
                     if (!newValue.Equals(currentValue))
                     {

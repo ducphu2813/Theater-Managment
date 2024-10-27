@@ -34,13 +34,19 @@ public class PaymentService : IPaymentService
         }
         
         //gửi payment id đến queue
-        _publisher.Publish(new PaymentEvent
-        {
-            PaymentId = payment.Id
-        });
+        // _publisher.Publish(new PaymentEvent
+        // {
+        //     PaymentId = payment.Id
+        // });
         
         
         return payment;
+    }
+    
+    //tìm bằng ticket id
+    public async Task<Payment?> GetByTicketIdAsync(string ticketId)
+    {
+        return await _paymentRepository.GetByTicketIdAsync(ticketId);
     }
     
     public async Task<Payment> AddPaymentAsync(Payment payment)
@@ -59,6 +65,26 @@ public class PaymentService : IPaymentService
         
         return await _paymentRepository.Update(id, payment);
     }
+
+    public async Task<Object> UpdateTicketStatus(string ticketId, string Status, string PaymentId, string paymentMethod)
+    {
+        //gửi 3 thông tin trên đến queue
+        _publisher.Publish(new PaymentEvent
+        {
+            PaymentId = PaymentId,
+            TicketId = ticketId,
+            Status = Status,
+            PaymentMethod = paymentMethod
+        });
+        
+        return new
+        {
+            TicketId = ticketId,
+            Status = Status,
+            PaymentId = PaymentId,
+            PaymentMethod = paymentMethod
+        };
+    }
     
     public async Task<bool> RemovePaymentAsync(string id)
     {
@@ -70,6 +96,12 @@ public class PaymentService : IPaymentService
         }
         
         return await _paymentRepository.Remove(id);
+    }
+    
+    //xóa tất cả payment
+    public async Task<bool> RemoveAll()
+    {
+        return await _paymentRepository.RemoveAll();
     }
     
 }

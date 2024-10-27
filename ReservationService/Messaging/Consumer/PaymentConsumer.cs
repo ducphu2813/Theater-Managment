@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ReservationService.Messaging.Interface;
 
-namespace ReservationService.Messaging;
+namespace ReservationService.Messaging.Consumer;
 
 public class PaymentConsumer<T> : IConsumer<T> where T : class
 {

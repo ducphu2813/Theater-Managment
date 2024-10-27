@@ -58,7 +58,7 @@ public class MongoDBRepository <TEntity> : IRepository<TEntity> where TEntity : 
         GC.SuppressFinalize(this);
     }
     
-    //hàm hỗ trợ tìm kiếm theo id
+    //hàm filter hỗ trợ tìm kiếm theo id
     private static FilterDefinition<TEntity> FilterId(string key)
     {
         return Builders<TEntity>.Filter.Eq("Id", key);

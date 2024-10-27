@@ -26,7 +26,7 @@ public class TicketRepository : MongoDBRepository<Ticket>, ITicketRepository
         return true;
     }
     
-    //hàm tìm bằng schelude id và seat id
+    //hàm tìm bằng schelude id và seat id và chỉ tìm những vé có Status là "processed"
     public async Task<List<Ticket>> GetByScheduleIdAndSeatIdAsync(string scheduleId, List<string> seatIds)
     {
         var filter = Builders<Ticket>.Filter.Eq("MovieScheduleId", scheduleId) &
