@@ -44,7 +44,8 @@ public class MovieService : IMovieService
             Description = movieDto.Description,
             Dub = movieDto.Dub,
             SubTitle = movieDto.SubTitle,
-            Genres = movieDto.Genres
+            Genres = movieDto.Genres,
+            Duration = movieDto.Duration
         };
         
         return await _movieRepository.Add(movie);

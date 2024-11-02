@@ -4,6 +4,7 @@ using MovieService.DTO;
 using MovieService.Entity.Model;
 using MovieService.Events;
 using MovieService.Exceptions;
+using MovieService.Helper;
 using MovieService.Messaging.Interface;
 using MovieService.Repository.Interface;
 using MovieService.Service.Interface;
@@ -98,6 +99,15 @@ public class MovieScheduleService : IMovieScheduleService
             throw new NotFoundException($"Movie Schedule with id {id} was not found.");
         }
         
+        //chỉnh sửa timezone
+        movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
+            ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)
+            : (DateTime?)null;
+        
+        movieSchedule.ShowTime = movieSchedule.ShowTime.HasValue
+            ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.ShowTime.Value)
+            : (DateTime?)null;
+        
         var Movie = await _movieRepository.GetById(movieSchedule.MovieId);
         
         var movieScheduleDto = new MovieScheduleDTO
@@ -141,6 +151,7 @@ public class MovieScheduleService : IMovieScheduleService
     }
     
     //cũng là hàm lấy theo schedule id nhưng để bên reservation dùng khi bên đó gọi get 1 ticket
+    //các service sử dụng: ReservationService
     public async Task<MovieScheduleDTO> GetByScheduleIdAsync(string scheduleId)
     {
         var movieSchedule = await _movieScheduleRepository.GetById(scheduleId);
@@ -161,13 +172,46 @@ public class MovieScheduleService : IMovieScheduleService
         
         return movieScheduleDto;
     }
+    
+    //lấy lịch chiếu theo ngày chiếu
+    public async Task<List<MovieScheduleDTO>> GetByShowDatesAsync(List<DateTime> showDates)
+    {
+        //lấy tất cả lịch chiếu theo ngày chiếu
+        var movieSchedules = await _movieScheduleRepository.GetByShowDatesAsync(showDates);
+        
+        //lấy tất cả movie id từ movie schedule
+        var movieIds = movieSchedules.Select(ms => ms.MovieId).Distinct().ToList();
+        
+        //lấy tất cả movie từ movie id
+        var movies = await _movieRepository.GetAllMovieAsyncById(movieIds);
+        
+        //chuyển đổi thành Dictionary để dễ dàng truy cập
+        var movieDict = movies.ToDictionary(m => m.Id);
+        
+        //chuyển đổi MovieSchedule sang MovieScheduleDTO
+        var movieScheduleDtos = movieSchedules.Select(ms => new MovieScheduleDTO
+        {
+            Id = ms.Id,
+            Movie = movieDict.ContainsKey(ms.MovieId) ? movieDict[ms.MovieId] : null,
+            RoomNumber = ms.RoomNumber,
+            ShowTime = ms.ShowTime,
+            SingleSeatPrice = ms.SingleSeatPrice,
+            CoupleSeatPrice = ms.CoupleSeatPrice,
+            CreatedAt = ms.CreatedAt,
+            Status = ms.Status
+        }).ToList();
+        
+        return movieScheduleDtos;
+    }
 
+    //thêm 1 hoặc nhiều lịch chiếu
     public async Task<List<MovieSchedule>> AddAsync(SaveMovieScheduleDTO movieScheduleDto)
     {
+        // gom các lỗi lại để thông báo sau
+        var conflictShows = new List<(ScheduleDetail Show1, ScheduleDetail Show2)>();
         
         //lấy movie từ movieId
         var movie = await _movieRepository.GetById(movieScheduleDto.MovieId);
-        
         if (movie == null)
         {
             throw new NotFoundException($"Movie with id {movieScheduleDto.MovieId} was not found.");
@@ -179,16 +223,93 @@ public class MovieScheduleService : IMovieScheduleService
         
         //lấy danh sách số phòng trong lịch chiếu
         var roomNumbers = movieScheduleDto.ScheduleDetails.Select(ms => ms.RoomNumber).ToList();
-        //tìm tất cả list lịch chiếu theo số phòng //Note 1.
-        var allMovieSchedules = await _movieScheduleRepository.GetByRoomNumbersAsync(roomNumbers);
+        //in ra danh sách số phòng lấy được
+        Console.WriteLine("Danh sách phòng từ request: ");
+        foreach (var roomNumber in roomNumbers)
+        {
+            Console.WriteLine(roomNumber);
+        }
         
-        Console.WriteLine("Tất cả lịch chiếu tìm được: " + allMovieSchedules);
+        //lấy danh sách ngày từ movieScheduleDto
+        var showDates = movieScheduleDto.ScheduleDetails.Select(ms => ms.ShowTime.Value).Distinct().ToList();
+        //in ra danh sách ngày lấy được
+        Console.WriteLine("Danh sách ngày từ request: ");
+        foreach (var showDate in showDates)
+        {
+            Console.WriteLine(showDate);
+        }
+        
+        //kiểm tra ngày trong movieScheduleDto trước
+        foreach (var showDate in showDates)
+        {
+            if (showDate.Date < DateTime.Now.Date)
+            {
+                throw new InvalidOperationException("Show time must be greater than to today.");
+            }
+        }
+        
+        //kiểm tra các giờ chiếu trong movieScheduleDto nếu chúng cùng phòng với nhau thì phải cách nhau hơn movie.Duration + 30 phút
+        //lấy tất cả ScheduleDetail từ movieScheduleDto
+        var scheduleDetails = movieScheduleDto.ScheduleDetails;
+        //nhóm theo phòng
+        var groupedShows = scheduleDetails
+            .GroupBy(s => s.RoomNumber)
+            .Where(g => g.Count() > 1);
+        
+        //kiểm tra từng phòng có lịch chiếu trùng
+        foreach (var roomShows in groupedShows)
+        {
+            var sortedShows = roomShows.OrderBy(s => s.ShowTime).ToList();
+
+            for (int i = 0; i < sortedShows.Count - 1; i++)
+            {
+                var show1 = sortedShows[i];
+                var show2 = sortedShows[i + 1];
+                var secondDiff = Math.Abs((show2.ShowTime - show1.ShowTime).Value.TotalSeconds);
+                
+                if(secondDiff < 30*60 + movie.Duration*60)
+                {
+                    conflictShows.Add((show1, show2));
+                }
+            }
+        }
+        
+        //nếu có lịch chiếu trùng thì thông báo
+        if (conflictShows.Count > 0)
+        {
+            var message = "Các lịch chiếu bị đụng giờ: ";
+            foreach (var (show1, show2) in conflictShows)
+            {
+                message += $"Phòng {show1.RoomNumber} với lịch: {show1.ShowTime} và {show2.ShowTime}, ";
+            }
+            throw new InvalidOperationException(message);
+        }
+        
+        //tìm tất cả list lịch chiếu theo số phòng và ngày chiếu
+        //Note 1. TÌm theo cả ngày chiếu để giảm số lượng lịch chiếu cần kiểm tra
+        var allMovieSchedules = await _movieScheduleRepository.GetByRoomNumbersAndShowDatesAsync(roomNumbers, showDates);
+        Console.WriteLine($"Tất cả lịch chiếu tìm được từ database: {allMovieSchedules.Count}");
+        //in ra từng lịch chiếu tìm được từ database
+        foreach (var movieSchedulesss in allMovieSchedules)
+        {
+            Console.WriteLine($"Lịch chiếu có được từ database: {movieSchedulesss.RoomNumber} - {movieSchedulesss.ShowTime}");
+        }
         
         //sau đó kiểm tra theo số phòng và giờ chiếu, đảm bảo trong vòng 3 tiếng không có 2 lịch chiếu cùng phòng
-        //
-        if (allMovieSchedules != null)
+        //trước đó thì cần đổi timezone trong movieScheduleDto.ScheduleDetails về utc
+        foreach (var scheduleDetail in movieScheduleDto.ScheduleDetails)
         {
-            Console.WriteLine("Oke có lịch chiếu ở phòng "+ roomNumbers);
+            scheduleDetail.ShowTime = TimeZoneHelper.ConvertToUtc(scheduleDetail.ShowTime.Value);
+        }
+        Console.WriteLine("Danh sách ngày từ request sau khi convert: ");
+        foreach (var showDate in movieScheduleDto.ScheduleDetails)
+        {
+            Console.WriteLine(showDate.ShowTime);
+        }
+        
+        if (allMovieSchedules != null && allMovieSchedules.Count > 0)
+        {
+            Console.WriteLine($"Oke có lịch chiếu ở phòng {roomNumbers} và giờ chiếu {showDates}");
             //lặp qua tất cả lịch chiếu được thêm vào
             foreach (var scheduleDetail in movieScheduleDto.ScheduleDetails)
             {
@@ -202,7 +323,8 @@ public class MovieScheduleService : IMovieScheduleService
                 
                 var isConflict = allMovieSchedules.Any(ms =>
                     ms.RoomNumber == scheduleDetail.RoomNumber &&
-                    Math.Abs((ms.ShowTime - scheduleDetail.ShowTime).Value.TotalSeconds) < 10800);
+                    ms.ShowTime.Value.Date == scheduleDetail.ShowTime.Value.Date && //cái này chỉ để kiểm tra 2 lịch chiếu cùng ngày
+                    Math.Abs((ms.ShowTime - scheduleDetail.ShowTime).Value.TotalSeconds) < 30*60 + movie.Duration*60); //cái này để kiểm tra 2 lịch chiếu cùng phòng cách nhau ít nhất 30 phút + thời lượng phim
                 
                 if (isConflict)
                 {
@@ -219,7 +341,8 @@ public class MovieScheduleService : IMovieScheduleService
             SingleSeatPrice = ms.SingleSeatPrice,
             CoupleSeatPrice = ms.CoupleSeatPrice,
             CreatedAt = ms.CreatedAt,
-            Status = ms.Status
+            Status = ms.Status,
+            Duration = movie.Duration
         }).ToList();
         
         var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
@@ -289,5 +412,11 @@ public class MovieScheduleService : IMovieScheduleService
     public async Task<bool> RemoveAsync(string id)
     {
         return await _movieScheduleRepository.Remove(id);
+    }
+    
+    //xóa tất cả lịch chiếu
+    public async Task DeleteAll()
+    {
+        await _movieScheduleRepository.DeleteAll();
     }
 }

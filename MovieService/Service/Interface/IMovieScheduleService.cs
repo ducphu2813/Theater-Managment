@@ -21,4 +21,10 @@ public interface IMovieScheduleService
     Task<MovieScheduleDTO> GetByScheduleIdAsync(string scheduleId);
 
     //hàm kiểm tra phòng và lịch chiếu có hợp lệ không(truyền vào số phòng và ngày chiếu)
+    
+    //lấy tất cả lịch chiếu theo danh sách ngày chiếu(tìm theo ngày)
+    Task<List<MovieScheduleDTO>> GetByShowDatesAsync(List<DateTime> showDates);
+    
+    //xóa tất cả movie schedule
+    Task DeleteAll();
 }

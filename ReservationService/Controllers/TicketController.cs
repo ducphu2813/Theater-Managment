@@ -33,6 +33,16 @@ public class TicketController : ControllerBase
         return Ok(result);
     }
     
+    //lấy theo user id
+    [HttpGet]
+    [Route("user/{userId}")]
+    public async Task<IActionResult> GetByUserIdAsync(string userId)
+    {
+        var result = await _ticketService.GetByUserIdAsync(userId);
+        return Ok(result);
+    }
+    
+    //các service sử dụng: Payment Service
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)
@@ -84,8 +94,8 @@ public class TicketController : ControllerBase
         return Ok(result);
     }
     
-    //lấy tất cả seat trong room và lấy seatdetail theo schedule id
-    //cái này dành cho bên movie service khi user muốn đặt mua vé
+    //lấy tất cả seat trong room và lấy seat detail theo schedule id
+    //các service sử dụng: Movie Service
     [HttpGet]
     [Route("schedule/{scheduleId}/seat/{roomNumber}")]
     public async Task<IActionResult> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber)

@@ -59,4 +59,10 @@ public class MovieSaleService : IMovieSaleService
         
         return await _movieSaleRepository.Remove(id);
     }
+    
+    //xóa tất cả movie sale
+    public async Task DeleteAll()
+    {
+        await _movieSaleRepository.DeleteAll();
+    }
 }

@@ -13,6 +13,7 @@ public class MovieSchedule
     public string? MovieId { get; set; }
     public string? RoomNumber { get; set; }
     public DateTime? ShowTime { get; set; }
+    public int? Duration { get; set; } //thời lượng phim tính bằng phút
     public int? SingleSeatPrice { get; set; }
     public int? CoupleSeatPrice { get; set; }
     public DateTime? CreatedAt { get; set; }

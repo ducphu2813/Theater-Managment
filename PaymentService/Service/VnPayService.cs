@@ -22,10 +22,12 @@ public class VnPayService : IVnPayService
         _actionContextAccessor = actionContextAccessor;
     }
     
-    public string CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
+    public string CreatePaymentUrl(PaymentInformationModel model, HttpContext context, DateTime expireDate)
     {
         var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"]);
         var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
+
+        var expiryTime = TimeZoneInfo.ConvertTimeFromUtc(expireDate, timeZoneById);
         
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
         var urlCallBack = "http://localhost:5006/payment/api/Payment/payment_result";
@@ -43,6 +45,9 @@ public class VnPayService : IVnPayService
         pay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
         pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
         pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
+        
+        // Truyền thời gian hết hạn vào tham số vnp_ExpireDate
+        pay.AddRequestData("vnp_ExpireDate", expiryTime.ToString("yyyyMMddHHmmss"));
         
         var paymentUrl = 
             pay.CreateRequestUrl(_configuration["VnPay:Url"], _configuration["VnPay:HashSecret"]);

@@ -98,6 +98,12 @@ public class PaymentService : IPaymentService
         return await _paymentRepository.Remove(id);
     }
     
+    //tìm bằng payment id
+    public async Task<Payment> GetByPaymentIdAsync(string paymentId)
+    {
+        return await _paymentRepository.GetByPaymentIdAsync(paymentId);
+    }
+    
     //xóa tất cả payment
     public async Task<bool> RemoveAll()
     {

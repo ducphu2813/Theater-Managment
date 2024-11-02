@@ -30,6 +30,15 @@ public class SeatController : ControllerBase
         return Ok(result);
     }
     
+    //lấy theo số phòng
+    [HttpGet]
+    [Route("room/{roomNumber}")]
+    public async Task<IActionResult> GetByRoomNumberAsync(string roomNumber)
+    {
+        var result = await _seatService.GetByRoomNumberAsync(roomNumber);
+        return Ok(result);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> AddAsync([FromBody] Seat seat)
     {
@@ -40,6 +49,20 @@ public class SeatController : ControllerBase
         }
         
         var result = await _seatService.AddAsync(seat);
+        return Ok(result);
+    }
+    
+    //thêm danh sách nhiều ghế
+    [HttpPost]
+    [Route("addList")]
+    public async Task<IActionResult> AddListAsync([FromBody] List<Seat> seats)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        var result = await _seatService.AddListAsync(seats);
         return Ok(result);
     }
     

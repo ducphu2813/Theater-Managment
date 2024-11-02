@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PaymentService.Entity.Model;
 using PaymentService.External.Model;
+using PaymentService.Helper;
 using PaymentService.Libraries;
 using PaymentService.Service.Interface;
 
@@ -75,7 +76,7 @@ public class PaymentController : ControllerBase
         
         try
         {
-            var paymentUrl = _vnPayService.CreatePaymentUrl(model, HttpContext);
+            var paymentUrl = _vnPayService.CreatePaymentUrl(model, HttpContext, ticket.Ticket.ExpiryTime.Value);
             return Ok(paymentUrl);   
         }
         catch (Exception e)
@@ -139,6 +140,14 @@ public class PaymentController : ControllerBase
     public async Task<IActionResult> GetAllAsync()
     {
         var result = await _paymentService.GetAllPaymentsAsync();
+        //chỉnh timezone 
+        foreach(var payment in result)
+        {
+            payment.CreatedAt = payment.CreatedAt.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(payment.CreatedAt.Value)
+                : (DateTime?)null;
+        }
+        
         return Ok(result);
     }
     
@@ -150,29 +159,12 @@ public class PaymentController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] Payment payment)
+    //tìm bằng payment id
+    [HttpGet]
+    [Route("paymentId/{paymentId}")]
+    public async Task<IActionResult> GetByPaymentIdAsync(string paymentId)
     {
-        
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
-        var result = await _paymentService.AddPaymentAsync(payment);
-        return Ok(result);
-    }
-    
-    [HttpPut]
-    [Route("{id}")]
-    public async Task<IActionResult> UpdateAsync(string id, [FromBody] Payment payment)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
-        var result = await _paymentService.UpdatePaymentAsync(id, payment);
+        var result = await _paymentService.GetByPaymentIdAsync(paymentId);
         return Ok(result);
     }
     

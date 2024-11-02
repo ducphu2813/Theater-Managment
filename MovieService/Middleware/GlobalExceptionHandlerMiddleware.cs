@@ -1,4 +1,6 @@
-﻿namespace MovieService.Middleware;
+﻿using MongoDB.Bson;
+
+namespace MovieService.Middleware;
 
 public class GlobalExceptionHandlerMiddleware
 {
@@ -46,6 +48,6 @@ public class GlobalExceptionHandlerMiddleware
         {
             StatusCode = statusCode,
             Message = message
-        }.ToString());
+        }.ToJson()); // trả về json để client có thể dễ dàng xử lý
     }
 }

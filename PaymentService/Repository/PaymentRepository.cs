@@ -19,6 +19,13 @@ public class PaymentRepository : MongoDBRepository<Payment>, IPaymentRepository
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
     
+    //tìm bằng payment id
+    public async Task<Payment> GetByPaymentIdAsync(string paymentId)
+    {
+        var filter = Builders<Payment>.Filter.Eq("PaymentId", paymentId);
+        return await _collection.Find(filter).FirstOrDefaultAsync();
+    }
+    
     //hàm xóa tất cả payment
     public async Task<bool> RemoveAll()
     {

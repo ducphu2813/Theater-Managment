@@ -11,6 +11,9 @@ public interface ITicketService
     Task<Ticket> UpdateAsync(string id, UpdateTicketDTO ticket);
     Task<bool> RemoveAsync(string id);
     
+    //lấy vé theo user id
+    Task<List<Ticket>> GetByUserIdAsync(string userId);
+    
     //hàm xóa tất cả vé
     Task<bool> RemoveAllAsync();
     

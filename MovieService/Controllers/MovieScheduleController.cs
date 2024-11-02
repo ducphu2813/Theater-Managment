@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieService.DTO;
+using MovieService.Helper;
 using MovieService.Service.Interface;
 
 namespace MovieService.Controllers;
@@ -19,6 +20,19 @@ public class MovieScheduleController : ControllerBase
     public async Task<IActionResult> GetAllAsync()
     {
         var result = await _movieScheduleService.GetAllAsync();
+        
+        //chỉnh sửa timezone
+        foreach (var movieSchedule in result)
+        {
+            movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)
+                : (DateTime?)null;
+            
+            movieSchedule.ShowTime = movieSchedule.ShowTime.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.ShowTime.Value)
+                : (DateTime?)null;
+        }
+        
         return Ok(result);
     }
     
@@ -28,6 +42,19 @@ public class MovieScheduleController : ControllerBase
     public async Task<IActionResult> GetByMovieIdAsync(string movieId)
     {
         var result = await _movieScheduleService.GetByMovieIdAsync(movieId);
+        
+        //chỉnh sửa timezone
+        foreach (var movieSchedule in result)
+        {
+            movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)
+                : (DateTime?)null;
+            
+            movieSchedule.ShowTime = movieSchedule.ShowTime.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.ShowTime.Value)
+                : (DateTime?)null;
+        }
+        
         return Ok(result);
     }
     
@@ -37,6 +64,42 @@ public class MovieScheduleController : ControllerBase
     public async Task<IActionResult> GetByIdAsync(string id)
     {
         var result = await _movieScheduleService.GetByIdAsync(id);
+        
+        //chỉnh sửa timezone
+        
+        
+        return Ok(result);
+    }
+    
+    //lấy theo ngày chiếu. Ví dụ: GET /api/MovieSchedule/showDates?showDates=2024-06-15&showDates=2024-06-16
+    [HttpGet]
+    [Route("showDates")]
+    public async Task<IActionResult> GetByShowDatesAsync()
+    {
+        //lấy param từ Request.QueryString
+        var showDateStrings = Request.Query["showDates"].ToList();
+        
+        // nếu không có param nào
+        if (showDateStrings.Count == 0)
+        {
+            return BadRequest("No dates were provided.");
+        }
+        
+        var showDates = new List<DateTime>();
+
+        foreach (var dateString in showDateStrings)
+        {
+            if (DateTime.TryParse(dateString, out var date))
+            {
+                showDates.Add(date);
+            }
+            else
+            {
+                return BadRequest($"Invalid date format: '{dateString}'.");
+            }
+        }
+        
+        var result = await _movieScheduleService.GetByShowDatesAsync(showDates);
         return Ok(result);
     }
     
@@ -71,7 +134,17 @@ public class MovieScheduleController : ControllerBase
         return Ok(result);
     }
     
+    //xóa tất cả movie schedule
+    [HttpDelete]
+    [Route("deleteAll")]
+    public async Task<IActionResult> DeleteAllAsync()
+    {
+        await _movieScheduleService.DeleteAll();
+        return Ok();
+    }
+    
     //hàm lấy movie schedule theo schedule id cho bên reservation dùng khi bên đó gọi get 1 ticket
+    //các service sử dụng: Reservation Service
     [HttpGet]
     [Route("schedule/{scheduleId}")]
     public async Task<IActionResult> GetByScheduleIdAsync(string scheduleId)

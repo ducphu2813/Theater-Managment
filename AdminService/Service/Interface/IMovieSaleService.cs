@@ -10,4 +10,7 @@ public interface IMovieSaleService
     Task<MovieSale> UpdateMovieSaleAsync(string id, MovieSale movieSale);
     Task<bool> RemoveMovieSaleAsync(string id);
     
+    //xóa tất cả movie sale
+    Task DeleteAll();
+    
 }

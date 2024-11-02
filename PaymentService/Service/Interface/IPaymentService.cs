@@ -16,6 +16,9 @@ public interface IPaymentService
     //tìm payment theo ticket id
     Task<Payment?> GetByTicketIdAsync(string ticketId);
     
+    //tìm bằng payment id
+    Task<Payment> GetByPaymentIdAsync(string paymentId);
+    
     //xóa tất cả payment
     Task<bool> RemoveAll();
 }

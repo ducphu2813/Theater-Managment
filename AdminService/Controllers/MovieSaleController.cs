@@ -1,4 +1,5 @@
 ﻿using AdminService.Entity.Model;
+using AdminService.Helper;
 using AdminService.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,25 @@ public class MovieSaleController : ControllerBase
     {
         var movieSales = await _movieSaleService.GetAllMovieSaleAsync();
         
+        //chỉnh timezone
+        foreach (var movieSale in movieSales)
+        {
+            movieSale.TicketCreatedDate = movieSale.TicketCreatedDate.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSale.TicketCreatedDate.Value)
+                : (DateTime?)null;
+        }
+        
         return Ok(movieSales);
+    }
+    
+    //xóa tất cả movie sale
+    [HttpDelete]
+    [Route("deleteAll")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        await _movieSaleService.DeleteAll();
+        
+        return Ok();
     }
     
     // [HttpGet("{id}")]

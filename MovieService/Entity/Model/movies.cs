@@ -16,6 +16,7 @@ public class movies
     public string? Description { get; set; }
     public string? Dub { get; set; }
     public string? SubTitle { get; set; }
+    public int? Duration { get; set; }  //thời lượng phim tính bằng phút
     
     [BsonRepresentation(BsonType.String)]
     public List<string>? Genres { get; set; }

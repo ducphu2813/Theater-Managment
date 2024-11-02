@@ -19,6 +19,13 @@ public class TicketRepository : MongoDBRepository<Ticket>, ITicketRepository
         return await _collection.Find(filter).ToListAsync();
     }
     
+    //lấy vé theo user id
+    public async Task<List<Ticket>> GetByUserIdAsync(string userId)
+    {
+        var filter = Builders<Ticket>.Filter.Eq("UserId", userId);
+        return await _collection.Find(filter).ToListAsync();
+    }
+    
     //hàm xóa tất cả vé
     public async Task<bool> RemoveAllAsync()
     {

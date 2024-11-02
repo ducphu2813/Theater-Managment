@@ -24,9 +24,21 @@ public class SeatService : ISeatService
         return await _seatRepository.GetById(id) ?? throw new NotFoundException($"Seat with id {id} was not found.");
     }
     
+    //lấy danh sách ghế theo số phòng
+    public async Task<IEnumerable<Seat>> GetByRoomNumberAsync(string roomNumber)
+    {
+        return await _seatRepository.GetByRoomNumberAsync(roomNumber);
+    }
+    
     public async Task<Seat> AddAsync(Seat seat)
     {
         return await _seatRepository.Add(seat);
+    }
+    
+    //hàm thêm danh sách nhiều ghế
+    public async Task<List<Seat>> AddListAsync(List<Seat> seats)
+    {
+        return await _seatRepository.AddListAsync(seats);
     }
     
     public async Task<Seat> UpdateAsync(string id, Seat seat)

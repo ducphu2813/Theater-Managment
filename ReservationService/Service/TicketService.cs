@@ -7,6 +7,7 @@ using ReservationService.Exceptions;
 using ReservationService.Repository.Interface;
 using ReservationService.Service.Interface;
 using ReservationService.External.Model;
+using ReservationService.Helper;
 
 namespace ReservationService.Service;
 
@@ -34,7 +35,25 @@ public class TicketService : ITicketService
 
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
-        return await _ticketRepository.GetAll();
+        //khai báo múi giờ
+        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+        
+        //lấy tất cả vé
+        var tickets = await _ticketRepository.GetAll();
+        
+        //duyệt qua từng vé để chuyển đổi múi giờ
+        foreach (var ticket in tickets)
+        {
+            ticket.CreatedAt = ticket.CreatedAt.HasValue 
+                ? TimeZoneInfo.ConvertTimeFromUtc(ticket.CreatedAt.Value, timeZoneInfo)
+                : (DateTime?)null;
+            
+            ticket.ExpiryTime = ticket.ExpiryTime.HasValue 
+                ? TimeZoneInfo.ConvertTimeFromUtc(ticket.ExpiryTime.Value, timeZoneInfo)
+                : (DateTime?)null;
+        }
+        
+        return tickets;
     }
     
     //lấy danh sách vé theo id lịch chiếu
@@ -42,8 +61,15 @@ public class TicketService : ITicketService
     {
         return await _ticketRepository.GetByScheduleIdAsync(scheduleId);
     }
+    
+    //lấy theo user id
+    public async Task<List<Ticket>> GetByUserIdAsync(string userId)
+    {
+        return await _ticketRepository.GetByUserIdAsync(userId);
+    }
 
-    //lấy theo id ticket, cái này lấy chi tiết cả movie schedule và movie(có cả id)
+    //lấy ticket theo id ticket, cái này lấy chi tiết cả movie schedule và movie(có cả id)
+    //các service khác sử dụng: Payment Service
     public async Task<Dictionary<String, Object>> GetByIdAsync(string id)
     {
         var ticket = await _ticketRepository.GetById(id);
@@ -68,6 +94,15 @@ public class TicketService : ITicketService
         var movieSchedule = JsonSerializer.Deserialize<MovieSchedule>(movieScheduleContent, options);
         
         // Console.WriteLine(response);
+        
+        //chỉnh sửa timezone
+        movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
+            ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)
+            : (DateTime?)null;
+        
+        movieSchedule.ShowTime = movieSchedule.ShowTime.HasValue
+            ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.ShowTime.Value)
+            : (DateTime?)null;
         
         //gộp ticket và response thành 1 map để trả về
         Dictionary<String, Object> map = new Dictionary<string, object>();
@@ -144,7 +179,7 @@ public class TicketService : ITicketService
             TotalAmount = 0,
             UserId = ticket.UserId,
             CreatedAt = DateTime.Now,
-            ExpiryTime = DateTime.Now.AddMinutes(5)
+            ExpiryTime = DateTime.Now.AddMinutes(30) //thêm thời gian hết hạn cho vé trong lúc chờ thanh toán
         };
         Console.WriteLine("vé mới tạo là : "+newTicket);
         
@@ -277,7 +312,7 @@ public class TicketService : ITicketService
         Console.WriteLine("id lich chieu truyen vao: "+scheduleId);
         
         //lấy tất cả vé theo id lịch chiếu
-        //chỉ lấy những vé có status là confirmed
+        //chỉ lấy những vé
         var tickets = await _ticketRepository.GetByScheduleIdAsync(scheduleId);
         
         //lấy tất cả ghế đã đặt

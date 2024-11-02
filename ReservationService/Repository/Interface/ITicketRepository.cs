@@ -8,6 +8,9 @@ public interface ITicketRepository : IRepository<Ticket>
     //lấy danh sách vé theo id lịch chiếu
     Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId);
     
+    //tìm vé theo user id
+    Task<List<Ticket>> GetByUserIdAsync(string userId);
+    
     //hàm xóa tất cả vé
     Task<bool> RemoveAllAsync();
     

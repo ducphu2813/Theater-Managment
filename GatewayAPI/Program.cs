@@ -72,18 +72,17 @@ public class Program
                             // Trả về lỗi 401 Unauthorized khi JWT hết hạn
                             context.Response.StatusCode = 401;
                             context.Response.ContentType = "application/json";
-                            return context.Response.WriteAsJsonAsync(new {
+                            return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new {
                                 message = "Token expired"
-                            }.ToString());
+                            }));
                         }
                         
                         // ghi ra console
                         Console.WriteLine("JWT Authentication Failed");
                         Console.WriteLine(context.Exception.ToString());
-                        return context.Response.WriteAsJsonAsync(new
-                        {
+                        return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new {
                             message = "Invalid token"
-                        }.ToString());
+                        }));
                     }
                 };
             });

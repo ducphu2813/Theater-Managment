@@ -26,4 +26,11 @@ public class SeatRepository : MongoDBRepository<Seat>, ISeatRepository
         return await _collection.Find(filter).ToListAsync();
     }
     
+    //thêm danh sách nhiều ghế
+    public async Task<List<Seat>> AddListAsync(List<Seat> seats)
+    {
+        await _collection.InsertManyAsync(seats);
+        return seats;
+    }
+    
 }
