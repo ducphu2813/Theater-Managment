@@ -149,7 +149,7 @@ public class TicketService : ITicketService
             throw new InvalidOperationException("Room number and seat is not match");
         }
         
-        //lấy schedule id và seat id để kiểm tra
+        //lấy ticket theo schedule id và seat id để kiểm tra
         var ticketList = await _ticketRepository.GetByScheduleIdAndSeatIdAsync(ticket.MovieScheduleId, ticket.SeatId);
         Console.WriteLine("tìm thấy "+ticketList.Count+" vé");
         //lấy thông tin chi tiết các ghế đã được đặt
@@ -235,8 +235,10 @@ public class TicketService : ITicketService
             throw new InvalidOperationException("Room number and seat is not match");
         }
         
-        //lấy schedule id và seat id để kiểm tra, cái này sẽ chỉ lấy những vé đã được thanh toán (status là processed)
+        //lấy ticket theo schedule id và seat id để kiểm tra
         var ticketList = await _ticketRepository.GetByScheduleIdAndSeatIdAsync(updateTicketDto.MovieScheduleId, updateTicketDto.SeatId);
+        //bỏ đi ticket hiện tại
+        ticketList = ticketList.Where(t => t.Id != id).ToList();
         Console.WriteLine("tìm thấy "+ticketList.Count+" vé");
         //lấy thông tin chi tiết các ghế đã được đặt
         List<Seat> seatDetails = new List<Seat>(); 
@@ -246,7 +248,7 @@ public class TicketService : ITicketService
         }
         if(ticketList.Count != 0)
         {
-            throw new InvalidOperationException("Seat has been booked: " +seatDetails.Select(s => s.ToString()));
+            throw new InvalidOperationException($"Seat has been booked: {seatDetails}");
         }
         
         //lấy tất cả property của update ticket DTO
@@ -332,29 +334,11 @@ public class TicketService : ITicketService
     //hàm cập nhật các Seat, Food và Discount của ticket
     private async Task<Ticket> UpdateTicketDetail(Ticket ticket, List<Seat> seats, Dictionary<String, int> seatPrice)
     {
-        //NOte: cần cập nhật cả giá vé, tính luôn giảm giá nếu có
-        //kiểm tra SeatId của ticket có null không
-        // if (ticket.SeatId != null)
-        // {
-        //     Console.WriteLine("seat id là : "+ticket.SeatId);
-        //     //lấy tất cả seat id trong ticket
-        //     var seatIds = ticket.SeatId;
-        //
-        //     //lấy tất cả seat theo id
-        //     var seats = await _seatRepository.GetByIdsAsync(seatIds);
-        //     Console.WriteLine("tìm thấy "+seats.Count+" seat");
-        //     
-        //     //nếu không có seat nào thì được tìm thấy theo id thì không làm gì cả
-        //     if (seats.Count != 0)
-        //     {
-        //         //cập nhật lại seat detail
-        //         ticket.SeatDetail = seats;
-        //         Console.WriteLine("seat detail của ticket là : "+ticket.SeatDetail);
-        //     }
-        // }
         
         ticket.SeatDetail = seats;
         Console.WriteLine("seat detail của ticket là : "+ticket.SeatDetail);
+        ticket.BaseAmount = 0;
+        ticket.TotalAmount = 0;
         
         //kiểm tra xem FoodId của ticket có null không
         if (ticket.FoodId != null)
@@ -370,6 +354,10 @@ public class TicketService : ITicketService
             //nếu không có food nào thì được tìm thấy theo id thì không làm gì cả
             if (foods.Count != 0)
             {
+                if (ticket.FoodDetail == null)
+                {
+                    ticket.FoodDetail = new List<Food>();
+                }
                 //cập nhật lại food
                 ticket.FoodDetail = foods;
                 Console.WriteLine("food detail của ticket là : "+ticket.FoodDetail);
@@ -379,6 +367,7 @@ public class TicketService : ITicketService
                 foreach (var food in ticket.FoodDetail)
                 {
                     foodAmount += (float)food.Amount;
+                    Console.WriteLine("Bắt đầu cộng tiền của food");
                 }
                 ticket.BaseAmount += foodAmount;
             }
@@ -397,6 +386,7 @@ public class TicketService : ITicketService
                 seatAmount += (float)seatPrice["coupleSeatPrice"];
             }
         }
+        Console.WriteLine("Bắt đầu cộng tiền của seat");
         ticket.BaseAmount += seatAmount;
         
         //kiểm tra xem DiscountId của ticket có null không
@@ -404,15 +394,19 @@ public class TicketService : ITicketService
         {
             //lấy danh sách các FoodType và SeatType trong ticket
             var foodTypes = ticket.FoodDetail.Select(f => f.FoodType).ToList();
+            Console.WriteLine("Tìm thấy "+foodTypes.Count+" food type");
             var seatTypes = ticket.SeatDetail.Select(s => s.SeatType).ToList();
+            Console.WriteLine("Tìm thấy "+seatTypes.Count+" seat type");
             //lấy discount theo id
             var discount = await _discountRepository.GetByFoodTypeAndSeatTypeAsync(foodTypes, seatTypes);
+            Console.WriteLine("Tìm thấy "+discount.Count+" discount");
             
             //nếu không có discount nào thì được tìm thấy theo id thì không làm gì cả
-            if (discount != null)
+            if (discount.Count > 0)
             {
                 //lấy discount lớn nhất
                 var maxDiscount = discount.OrderByDescending(d => d.PercentOff).FirstOrDefault();
+                Console.WriteLine($"Tìm thấy discount lớn nhất"+ maxDiscount.PercentOff);
                 
                 //cập nhật lại discount
                 ticket.DiscountDetail = maxDiscount;
