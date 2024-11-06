@@ -33,4 +33,30 @@ public class SeatRepository : MongoDBRepository<Seat>, ISeatRepository
         return seats;
     }
     
+    //update nhiều seat
+    public async Task<List<Seat>> UpdateListAsync(List<Seat> seats)
+    {
+        var bulkOps = new List<WriteModel<Seat>>();
+
+        foreach (var seat in seats)
+        {
+            var filter = Builders<Seat>.Filter.Eq(s => s.Id, seat.Id);
+            var update = Builders<Seat>.Update
+                .Set(s => s.RoomNumber, seat.RoomNumber)
+                .Set(s => s.Row, seat.Row)
+                .Set(s => s.Column, seat.Column)
+                .Set(s => s.SeatType, seat.SeatType);
+
+            var updateOne = new UpdateOneModel<Seat>(filter, update);
+            bulkOps.Add(updateOne);
+        }
+
+        if (bulkOps.Count > 0)
+        {
+            await _collection.BulkWriteAsync(bulkOps);
+        }
+
+        return seats;
+    }
+    
 }

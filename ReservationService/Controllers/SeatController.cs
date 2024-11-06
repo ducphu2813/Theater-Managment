@@ -79,6 +79,20 @@ public class SeatController : ControllerBase
         return Ok(result);
     }
     
+    //update nhiều seat
+    [HttpPut]
+    [Route("updateList")]
+    public async Task<IActionResult> UpdateListAsync([FromBody] List<Seat> seats)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        var result = await _seatService.UpdateListAsync(seats);
+        return Ok(result);
+    }
+    
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> RemoveAsync(string id)

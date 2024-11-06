@@ -31,10 +31,11 @@ public class MovieScheduleService : IMovieScheduleService
         _httpClient = httpClientFactory.CreateClient("reservation-service");
     }
     
-    public async Task<IEnumerable<MovieScheduleDTO>> GetAllAsync()
+    public async Task<Dictionary<string, object>> GetAllAsync(int page, int limit)
     {
         //lấy tất cả MovieSchedule
-        var movieSchedules = await _movieScheduleRepository.GetAll();
+        var result = await _movieScheduleRepository.GetAll(page, limit);
+        var movieSchedules = result["records"] as List<MovieSchedule>;
         
         //lấy tất cả movie id từ movie schedule
         var movieIds = movieSchedules.Select(ms => ms.MovieId).Distinct().ToList();
@@ -58,7 +59,9 @@ public class MovieScheduleService : IMovieScheduleService
             Status = ms.Status
         }).ToList();
         
-        return movieScheduleDtos;
+        result["records"] = movieScheduleDtos;
+        
+        return result;
 
     }
     

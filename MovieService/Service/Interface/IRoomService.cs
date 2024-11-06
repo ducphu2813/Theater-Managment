@@ -4,7 +4,7 @@ namespace MovieService.Service.Interface;
 
 public interface IRoomService
 {
-    Task<IEnumerable<Room>> GetAllAsync();
+    Task<Dictionary<string, object>> GetAllAsync(int page, int limit);
     Task<Room> GetByIdAsync(string id);
     Task<Room> AddAsync(Room room);
     Task<IEnumerable<Room>> AddListAsync(List<Room> rooms);

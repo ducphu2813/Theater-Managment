@@ -5,7 +5,7 @@ namespace MovieService.Service.Interface;
 
 public interface IMovieService
 {
-    Task<IEnumerable<movies>> GetAllAsync();
+    Task<Dictionary<string, object>> GetAllAsync(int page, int limit);
     Task<movies> GetByIdAsync(string id);
     Task<movies> AddAsync(MovieDTO movieDto);
     Task<movies> UpdateAsync(string id, MovieDTO movieDto);

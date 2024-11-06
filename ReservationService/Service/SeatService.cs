@@ -65,4 +65,10 @@ public class SeatService : ISeatService
         return await _seatRepository.Remove(id);
     }
     
+    //update nhiều seat
+    public async Task<List<Seat>> UpdateListAsync(List<Seat> seats)
+    {
+        return await _seatRepository.UpdateListAsync(seats);
+    }
+    
 }

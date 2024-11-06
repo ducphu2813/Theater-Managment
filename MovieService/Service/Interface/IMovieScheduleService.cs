@@ -5,7 +5,7 @@ namespace MovieService.Service.Interface;
 
 public interface IMovieScheduleService
 {
-    Task<IEnumerable<MovieScheduleDTO>> GetAllAsync();
+    Task<Dictionary<string, object>> GetAllAsync(int page, int limit);
     Task<Dictionary<String, Object>> GetByIdAsync(string id);
     Task<List<MovieSchedule>> AddAsync(SaveMovieScheduleDTO movieScheduleDto);
     // Task<List<MovieSchedule>> AddListAsync(List<SaveMovieScheduleDTO> movieScheduleDtos);

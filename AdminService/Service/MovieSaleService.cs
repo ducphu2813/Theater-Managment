@@ -65,4 +65,26 @@ public class MovieSaleService : IMovieSaleService
     {
         await _movieSaleRepository.DeleteAll();
     }
+    
+    //tìm theo payment id
+    public async Task<MovieSale> GetByPaymentId(string paymentId)
+    {
+        return await _movieSaleRepository.GetByPaymentId(paymentId);
+    }
+    
+    //tìm theo user id
+    public async Task<List<MovieSale>> GetByUserId(string userId)
+    {
+        return await _movieSaleRepository.GetByUserId(userId);
+    }
+    
+    //tìm theo 1 khoảng cách ngày, tìm theo TicketCreatedDate
+    public async Task<List<MovieSale>> FindByDateRangeAsync(DateTime from, DateTime to)
+    {
+        //chuyển về utc
+        var fromUtc = DateTime.SpecifyKind(from, DateTimeKind.Utc);
+        var toUtc = DateTime.SpecifyKind(to, DateTimeKind.Utc);
+        
+        return await _movieSaleRepository.FindByDateRangeAsync(fromUtc, toUtc);
+    }
 }

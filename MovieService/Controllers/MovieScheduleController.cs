@@ -19,10 +19,17 @@ public class MovieScheduleController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var result = await _movieScheduleService.GetAllAsync();
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        //in thử các param phân trang
+        // Console.WriteLine($"Page: {page}");
+        // Console.WriteLine($"Limit: {limit}");
+        
+        var result = await _movieScheduleService.GetAllAsync(page, limit);
         
         //chỉnh sửa timezone
-        foreach (var movieSchedule in result)
+        foreach (var movieSchedule in (List<MovieScheduleDTO>)result["records"])
         {
             movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
                 ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)

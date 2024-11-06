@@ -27,7 +27,6 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
-    restart: always
     networks:
       - theater_network
   
@@ -39,7 +38,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-    restart: always
     networks:
       - theater_network
       

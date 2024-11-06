@@ -14,9 +14,26 @@ public class MongoDBRepository <TEntity> : IRepository<TEntity> where TEntity : 
     }
     
     //tìm tất cả dữ liệu
-    public virtual async Task<IEnumerable<TEntity>> GetAll()
+    public virtual async Task<Dictionary<string, object>> GetAll(int page, int limit)
     {
-        return await _collection.Find(Builders<TEntity>.Filter.Empty).ToListAsync();
+        // đếm tổng số bản ghi trong collection
+        var totalRecords = await _collection.CountDocumentsAsync(Builders<TEntity>.Filter.Empty);
+        
+        // lấy data
+        var records = await _collection
+            .Find(Builders<TEntity>.Filter.Empty)
+            .Skip((page - 1) * limit)
+            .Limit(limit)
+            .ToListAsync();
+        
+        // gộp lại thành 1 dictionary
+        return new Dictionary<string, object>
+        {
+            { "totalRecords", totalRecords },
+            { "records", records },
+            { "limit", limit },
+            { "page", page }
+        };
     }
 
     //tìm theo id

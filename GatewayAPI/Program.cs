@@ -104,6 +104,9 @@ public class Program
         //đăng ký middleware gắn userId vào request body
         app.UseMiddleware<UserIdInjectionMiddleware>();
         
+        //đăng ký middleware phân trang
+        app.UseMiddleware<PagingMiddleware>();
+        
         app.UseAuthorization();
 
         app.MapControllers();

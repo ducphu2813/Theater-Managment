@@ -15,4 +15,7 @@ public interface ISeatService
     
     //hàm thêm danh sách nhiều ghế
     Task<List<Seat>> AddListAsync(List<Seat> seats);
+    
+    //update nhiều seat
+    Task<List<Seat>> UpdateListAsync(List<Seat> seats);
 }

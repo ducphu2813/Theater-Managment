@@ -16,9 +16,9 @@ public class MovieService : IMovieService
         _movieRepository = movieRepository;
     }
     
-    public async Task<IEnumerable<movies>> GetAllAsync()
+    public async Task<Dictionary<string, object>> GetAllAsync(int page, int limit)
     {
-        return await _movieRepository.GetAll();
+        return await _movieRepository.GetAll(page, limit);
     }
 
     public async Task<movies> GetByIdAsync(string id)

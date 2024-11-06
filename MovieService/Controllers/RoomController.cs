@@ -20,7 +20,13 @@ public class RoomController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var result = await _roomService.GetAllAsync();
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        //in thử các param phân trang
+        // Console.WriteLine($"Page: {page}");
+        // Console.WriteLine($"Limit: {limit}");
+        var result = await _roomService.GetAllAsync(page, limit);
         return Ok(result);
     }
     

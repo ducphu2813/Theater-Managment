@@ -14,9 +14,9 @@ public class RoomService : IRoomService
         _roomRepository = roomRepository;
     }
     
-    public async Task<IEnumerable<Room>> GetAllAsync()
+    public async Task<Dictionary<string, object>> GetAllAsync(int page, int limit)
     {
-        return await _roomRepository.GetAll();
+        return await _roomRepository.GetAll(page, limit);
     }
 
     public async Task<Room> GetByIdAsync(string id)
