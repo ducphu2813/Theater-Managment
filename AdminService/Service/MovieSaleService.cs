@@ -18,6 +18,46 @@ public class MovieSaleService : IMovieSaleService
     {
         return await _movieSaleRepository.GetAll();
     }
+    
+    //tìm nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> movieId
+        , List<string> genres
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice)
+    {
+        var results = await _movieSaleRepository.GetAllAdvance(
+            page
+            , limit
+            , movieId
+            , genres
+            , fromCreateDate
+            , toCreateDate
+            , fromTotalPrice
+            , toTotalPrice
+            , sortByCreateDate
+            , sortByTotalPrice);
+        
+        //chỉnh timezone cho từng item
+        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+        foreach (var item in results["records"] as List<MovieSale>)
+        {
+            item.TicketCreatedDate = item.TicketCreatedDate.HasValue
+                ? TimeZoneInfo.ConvertTimeFromUtc(item.TicketCreatedDate.Value, timeZoneInfo)
+                : (DateTime?)null;
+            
+            item.ShowTime = item.ShowTime.HasValue
+                ? TimeZoneInfo.ConvertTimeFromUtc(item.ShowTime.Value, timeZoneInfo)
+                : (DateTime?)null;
+        }
+        return results;
+    }
 
     public async Task<MovieSale> GetMovieSaleByIdAsync(string id)
     {

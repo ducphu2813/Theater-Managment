@@ -41,7 +41,7 @@ public class PaymentController : ControllerBase
 
         //kiểm tra ticket id
         //gọi api đến reservation service lấy ticket
-        var response = await _httpClient.GetAsync($"api/Ticket/{model.TicketID}");
+        var response = await _httpClient.GetAsync($"internal/TicketInternal/{model.TicketID}");
         
         //cái này để chuyển từ snake_case sang camelCase
         var options = new JsonSerializerOptions

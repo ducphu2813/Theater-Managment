@@ -126,7 +126,7 @@ public class MovieScheduleService : IMovieScheduleService
         };
         
         //gọi api đến reservation service để lấy tất cả chỗ ngồi và chỗ ngồi đã đặt
-        var response = await _httpClient.GetAsync($"/api/Ticket/schedule/{id}/seat/{movieSchedule.RoomNumber}");
+        var response = await _httpClient.GetAsync($"/internal/TicketInternal/schedule/{id}/seat/{movieSchedule.RoomNumber}");
         
         //cái này để chuyển từ snake_case sang camelCase
         var options = new JsonSerializerOptions

@@ -22,4 +22,18 @@ public interface ITicketService
     
     //lấy tất cả SeatDetail theo id lịch chiếu
     Task<Dictionary<String, Object>> GetAllBookedSeatByScheduleIdAsync(string scheduleId, string roomNumber);
+    
+    //hàm tìm ticket nâng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , string userId
+        , List<string> scheduleId
+        , string status
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice);
 }

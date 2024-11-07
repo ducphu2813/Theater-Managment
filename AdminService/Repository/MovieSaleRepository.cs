@@ -46,6 +46,101 @@ public class MovieSaleRepository : MongoDBRepository<MovieSale>, IMovieSaleRepos
         // tìm theo filter vừa tạo
         return await _collection.Find(filter).ToListAsync();
     }
-
     
+    //tìm nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> movieId
+        , List<string> genres
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice)
+    {
+        //tạo filter
+        var filters = new List<FilterDefinition<MovieSale>>();
+        
+        //kiểm tra param movieId
+        if (movieId != null && movieId.Count > 0)
+        {
+            filters.Add(Builders<MovieSale>.Filter.In(u => u.MovieDetail.Id, movieId));
+        }
+        
+        //kiểm tra param genres
+        if (genres != null && genres.Count > 0)
+        {
+            filters.Add(Builders<MovieSale>.Filter.AnyIn(u => u.Genres, genres));
+        }
+        
+        //kiểm tra param fromCreateDate
+        if (fromCreateDate != DateTime.MinValue)
+        {
+            filters.Add(Builders<MovieSale>.Filter.Gte(u => u.TicketCreatedDate, fromCreateDate));
+        }
+        
+        //kiểm tra param toCreateDate
+        if (toCreateDate != DateTime.MinValue)
+        {
+            filters.Add(Builders<MovieSale>.Filter.Lte(u => u.TicketCreatedDate, toCreateDate));
+        }
+        
+        //kiểm tra param fromTotalPrice
+        if (fromTotalPrice != 0)
+        {
+            filters.Add(Builders<MovieSale>.Filter.Gte(u => u.TotalAmount, fromTotalPrice));
+        }
+        
+        //kiểm tra param toTotalPrice
+        if (toTotalPrice != 0)
+        {
+            filters.Add(Builders<MovieSale>.Filter.Lte(u => u.TotalAmount, toTotalPrice));
+        }
+        
+        //kết hợp các filter
+        var combinedFilter = filters.Count > 0 ? Builders<MovieSale>.Filter.And(filters) : Builders<MovieSale>.Filter.Empty;
+        
+        //tạo sort definition
+        SortDefinition<MovieSale> sortDefinition = Builders<MovieSale>.Sort.Descending(u => u.TicketCreatedDate);
+        //kiểm tra param sortByCreateDate
+        if(sortByCreateDate == "asc")
+        {
+            sortDefinition = Builders<MovieSale>.Sort.Ascending(u => u.TicketCreatedDate);
+        }
+        else if(sortByCreateDate == "desc")
+        {
+            sortDefinition = Builders<MovieSale>.Sort.Descending(u => u.TicketCreatedDate);
+        }
+        //kiểm tra param sortByTotalPrice
+        if(sortByTotalPrice == "asc")
+        {
+            sortDefinition = Builders<MovieSale>.Sort.Ascending(u => u.TotalAmount);
+        }
+        else if(sortByTotalPrice == "desc")
+        {
+            sortDefinition = Builders<MovieSale>.Sort.Descending(u => u.TotalAmount);
+        }
+        //lấy count record
+        var totalRecords = await _collection.CountDocumentsAsync(combinedFilter);
+        //tìm và sắp xếp
+        var records = await _collection
+            .Find(combinedFilter) //sử dụng filter
+            .Sort(sortDefinition) //sắp xếp
+            .Skip((page - 1) * limit)
+            .Limit(limit)
+            .ToListAsync();
+        
+        //gộp thành 1 dictionary
+        return new Dictionary<string, object>
+        {
+            {"totalRecords", totalRecords},
+            {"records", records},
+            {"limit", limit},
+            {"page", page}
+        };
+    }
+
+
 }

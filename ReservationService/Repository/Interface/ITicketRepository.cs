@@ -16,4 +16,18 @@ public interface ITicketRepository : IRepository<Ticket>
     
     //hàm tìm bằng schelude id và seat id
     Task<List<Ticket>> GetByScheduleIdAndSeatIdAsync(string scheduleId, List<string> seatIds);
+    
+    //hàm tìm ticket nâng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , string userId
+        , List<string> scheduleId
+        , string status
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice);
 }

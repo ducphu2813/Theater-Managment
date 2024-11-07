@@ -21,4 +21,6 @@ public interface IMovieScheduleRepository : IRepository<MovieSchedule>
     
     //hàm xóa tất cả movie schedule
     Task DeleteAll();
+    
+    
 }

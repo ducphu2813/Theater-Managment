@@ -56,6 +56,49 @@ public class TicketService : ITicketService
         return tickets;
     }
     
+    //hàm tìm ticket nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , string userId
+        , List<string> scheduleId
+        , string status
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice)
+    {
+        var result = await _ticketRepository.GetAllAdvance(
+            page
+            , limit
+            , userId
+            , scheduleId
+            , status
+            , fromCreateDate
+            , toCreateDate
+            , fromTotalPrice
+            , toTotalPrice
+            , sortByCreateDate
+            , sortByTotalPrice);
+        
+        //chỉnh timezone cho từng ticket
+        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+        foreach (var ticket in result["records"] as List<Ticket>)
+        {
+            ticket.CreatedAt = ticket.CreatedAt.HasValue
+                ? TimeZoneInfo.ConvertTimeFromUtc(ticket.CreatedAt.Value, timeZoneInfo)
+                : (DateTime?)null;
+            
+            ticket.ExpiryTime = ticket.ExpiryTime.HasValue
+                ? TimeZoneInfo.ConvertTimeFromUtc(ticket.ExpiryTime.Value, timeZoneInfo)
+                : (DateTime?)null;
+        }
+        
+        return result;
+    }
+    
     //lấy danh sách vé theo id lịch chiếu
     public async Task<List<Ticket>> GetByScheduleIdAsync(string scheduleId)
     {
@@ -82,7 +125,7 @@ public class TicketService : ITicketService
         Console.WriteLine(ticket.MovieScheduleId);
         
         //gọi api của movie service để lấy thông tin phim và lịch chiếu
-        var response = await _httpClient.GetAsync($"/api/MovieSchedule/schedule/{ticket.MovieScheduleId}");
+        var response = await _httpClient.GetAsync($"/internal/MovieScheduleInternal/schedule/{ticket.MovieScheduleId}");
         
         //cái này để chuyển từ snake_case sang camelCase
         var options = new JsonSerializerOptions
@@ -129,7 +172,7 @@ public class TicketService : ITicketService
         // 3. Dùng schedule id để lấy giá ghế đơn và giá ghế đôi
         
         //gọi api của movie service để lấy thông tin phim và lịch chiếu
-        var response = await _httpClient.GetAsync($"/api/MovieSchedule/schedule/{ticket.MovieScheduleId}");
+        var response = await _httpClient.GetAsync($"/internal/MovieScheduleInternal/schedule/{ticket.MovieScheduleId}");
         //kiểm tra response có lỗi không
         if (!response.IsSuccessStatusCode)
         {
@@ -220,7 +263,7 @@ public class TicketService : ITicketService
         }
         
         //gọi api của movie service để lấy thông tin phim và lịch chiếu
-        var response = await _httpClient.GetAsync($"/api/MovieSchedule/schedule/{updateTicketDto.MovieScheduleId}");
+        var response = await _httpClient.GetAsync($"/internal/MovieScheduleInternal/schedule/{updateTicketDto.MovieScheduleId}");
         //cái này để chuyển từ snake_case sang camelCase
         var options = new JsonSerializerOptions
         {

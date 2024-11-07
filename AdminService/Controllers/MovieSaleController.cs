@@ -36,6 +36,57 @@ public class MovieSaleController : ControllerBase
         return Ok(movieSales);
     }
     
+    //tìm nâng cao
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvance()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        //lấy ra các param tìm kiếm nâng cao
+        var movieId = Request.Query["movieId"]
+            .ToString()          //convert thành string
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  //tách theo dấu ,
+            .ToList();  //thành mảng
+        var genres = Request.Query["genres"]
+            .ToString()          //convert thành string
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  //tách theo dấu ,
+            .ToList();  //thành mảng
+        var fromCreateDate = DateTime.TryParse(Request.Query["fromCreateDate"], out var parsedFromCreateDate)
+            ? parsedFromCreateDate.ToUniversalTime()
+            : DateTime.MinValue; // giá trị mặc định
+        var toCreateDate = DateTime.TryParse(Request.Query["toCreateDate"], out var parsedToCreateDate)
+            ? parsedToCreateDate.ToUniversalTime()
+            : DateTime.MinValue; // giá trị mặc định
+        var fromTotalPrice = float.TryParse(Request.Query["fromTotalPrice"], out var parsedFromTotalPrice)
+            ? parsedFromTotalPrice
+            : 0; // giá trị mặc định
+        var toTotalPrice = float.TryParse(Request.Query["toTotalPrice"], out var parsedToTotalPrice)
+            ? parsedToTotalPrice
+            : 0; // giá trị mặc định
+        //lấy sort từ param
+        string sortByCreateDate = "";
+        string sortByTotalPrice = "";
+        sortByCreateDate = Request.Query["sortByCreateDate"].ToString().ToLower(); 
+        sortByTotalPrice = Request.Query["sortByTotalPrice"].ToString().ToLower();
+        
+        var result = await _movieSaleService.GetAllAdvance(
+            page
+            , limit
+            , movieId
+            , genres
+            , fromCreateDate
+            , toCreateDate
+            , fromTotalPrice
+            , toTotalPrice
+            , sortByCreateDate
+            , sortByTotalPrice);
+        
+        return Ok(result);
+    }
+    
     //xóa tất cả movie sale
     [HttpDelete]
     [Route("deleteAll")]

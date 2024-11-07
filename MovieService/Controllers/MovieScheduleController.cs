@@ -150,14 +150,4 @@ public class MovieScheduleController : ControllerBase
         return Ok();
     }
     
-    //hàm lấy movie schedule theo schedule id cho bên reservation dùng khi bên đó gọi get 1 ticket
-    //các service sử dụng: Reservation Service
-    [HttpGet]
-    [Route("schedule/{scheduleId}")]
-    public async Task<IActionResult> GetByScheduleIdAsync(string scheduleId)
-    {
-        var result = await _movieScheduleService.GetByScheduleIdAsync(scheduleId);
-        return Ok(result);
-    }
-    
 }

@@ -34,6 +34,49 @@ public class MovieController : ControllerBase
         return Ok(result);
     }
     
+    //lấy tất cả movie nâng cao
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvanceAsync()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        //lấy ra các param tìm kiếm nâng cao
+        var name = Request.Query["name"]
+            .ToString()     //convert thành string     
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  //tách theo dấu ,
+            .ToList();  //thành mảng
+        var director = Request.Query["director"]
+            .ToString()          
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  
+            .ToList();  
+        var actor = Request.Query["actor"]
+            .ToString()          
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  
+            .ToList();  
+        var author = Request.Query["author"]
+            .ToString()          
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  
+            .ToList();  
+        var dub = Request.Query["dub"]
+            .ToString()          
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  
+            .ToList();  
+        var subtitle = Request.Query["subtitle"]
+            .ToString()
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
+        var genres = Request.Query["genres"]
+            .ToString()
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
+        
+        var result = await _movieService.GetAllAdvance(page, limit, name, director, actor, author, dub, subtitle, genres);
+        return Ok(result);
+    }
+    
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)

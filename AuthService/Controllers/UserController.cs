@@ -22,6 +22,26 @@ public class UserController : ControllerBase
         return Ok(result);
     }
     
+    //lấy tất cả user theo username và role
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvanceAsync()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        //lấy ra các param tìm kiếm nâng cao
+        var username = Request.Query["username"];
+        //lấy roles từ param, lưu thành 1 mảng string
+        var roles = Request.Query["roles"]
+            .ToString()          //convert thành string
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)  //tách theo dấu ,
+            .ToList();  //thành mảng
+        var result = await _userService.GetAllAdvance(page, limit, username, roles);
+        return Ok(result);
+    }
+    
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetByIdAsync(string id)

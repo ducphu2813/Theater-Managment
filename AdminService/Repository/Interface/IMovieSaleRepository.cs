@@ -16,4 +16,17 @@ public interface IMovieSaleRepository : IRepository<MovieSale>
     
     //tìm theo 1 khoảng cách ngày, tìm theo TicketCreatedDate
     Task<List<MovieSale>> FindByDateRangeAsync(DateTime from, DateTime to);
+    
+    //tìm nâng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> movieId
+        , List<string> genres
+        , DateTime fromCreateDate
+        , DateTime toCreateDate
+        , float fromTotalPrice
+        , float toTotalPrice
+        , string sortByCreateDate
+        , string sortByTotalPrice);
 }

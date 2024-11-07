@@ -92,4 +92,10 @@ public class UserService : IUserService
         
         return await _roleRepository.GetRolePermissionByRolename(user.Roles);
     }
+    
+    //lấy tất cả user theo username và role
+    public async Task<Dictionary<string, object>> GetAllAdvance(int page, int limit, string username, List<string> roles)
+    {
+        return await _userRepository.GetAllAdvance(page, limit, username, roles);
+    }
 }

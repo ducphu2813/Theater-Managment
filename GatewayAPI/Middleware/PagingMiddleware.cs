@@ -31,8 +31,9 @@ public class PagingMiddleware
             }
             
             //tạo lại query string mới với page và limit
-            var modifiedQueryString = string.Join("&", query.Select(q => $"{q.Key}={q.Value}"));
-            context.Request.QueryString = new QueryString($"?{modifiedQueryString}");
+            context.Request.QueryString = QueryString.Create(query);
+            // var modifiedQueryString = string.Join("&", query.Select(q => $"{q.Key}={q.Value}"));
+            // context.Request.QueryString = new QueryString($"?{modifiedQueryString}");
             
             //in thử query string mới
             Console.WriteLine($"Query string mới: {context.Request.QueryString}");

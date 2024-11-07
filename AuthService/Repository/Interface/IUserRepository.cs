@@ -10,4 +10,7 @@ public interface IUserRepository : IRepository<User>
     
     //lấy user theo username
     Task<User> GetUserByUsername(string username);
+    
+    //lấy tất cả user theo username và role
+    Task<Dictionary<string, object>> GetAllAdvance(int page, int limit, string username, List<string> roles);
 }

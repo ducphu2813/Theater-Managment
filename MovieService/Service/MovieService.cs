@@ -20,6 +20,21 @@ public class MovieService : IMovieService
     {
         return await _movieRepository.GetAll(page, limit);
     }
+    
+    //hàm tìm movie nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> name
+        , List<string> director
+        , List<string> actor
+        , List<string> author
+        , List<string> dub
+        , List<string> subtitle
+        , List<string> genres)
+    {
+        return await _movieRepository.GetAllAdvance(page, limit, name, director, actor, author, dub, subtitle, genres);
+    }
 
     public async Task<movies> GetByIdAsync(string id)
     {

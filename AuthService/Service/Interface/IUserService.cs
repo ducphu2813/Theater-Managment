@@ -15,4 +15,7 @@ public interface IUserService
     
     //lấy tất cả role permission của user theo username
     Task<List<RolePermission>> GetRolePermissionsByUsernameAsync(string username);
+    
+    //lấy tất cả user theo username và role
+    Task<Dictionary<string, object>> GetAllAdvance(int page, int limit, string username, List<string> roles);
 }
