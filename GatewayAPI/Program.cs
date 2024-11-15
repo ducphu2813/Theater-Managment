@@ -64,6 +64,7 @@ public class Program
                 {
                     OnTokenValidated = context =>
                     {
+                        Console.WriteLine("vào on token validated");
                         // In ra các claim từ JWT sau khi xác thực thành công
                         var claims = context.Principal.Claims;
                         foreach (var claim in claims)
@@ -74,8 +75,8 @@ public class Program
                     },
                     OnAuthenticationFailed = context =>
                     {
-                        
-                        // ghi ra console
+                        Console.WriteLine("vào on authentication failed");
+                        // khi jwt hết hạn, 
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
                             Console.WriteLine("JWT Token expired");
@@ -91,9 +92,27 @@ public class Program
                         // ghi ra console
                         Console.WriteLine("JWT Authentication Failed");
                         Console.WriteLine(context.Exception.ToString());
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
                         return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new {
                             message = "Invalid token"
                         }));
+                    },
+                    OnChallenge = context =>
+                    {
+                        Console.WriteLine("vào on challenge");
+                        // khi ko có jwt 
+                        if (context.AuthenticateFailure != null)
+                        {
+                            Console.WriteLine("No JWT token provided");
+                            context.Response.StatusCode = 401;
+                            context.Response.ContentType = "application/json";
+                            return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new
+                            {
+                                message = "No token provided"
+                            }));
+                        }
+                        return Task.CompletedTask;
                     }
                 };
             });

@@ -10,8 +10,14 @@ public interface IUserService
     Task<User> UpdateAsync(string id, User user);
     Task<bool> RemoveAsync(string id);
     
+    //lấy user theo username
+    Task<User> GetUserByUsername(string username);
+    
     //hàm login
     Task<string> LoginAsync(string username, string password);
+    
+    //hàm register
+    Task<User> RegisterAsync(RegisterRequest registerRequest);
     
     //lấy tất cả role permission của user theo username
     Task<List<RolePermission>> GetRolePermissionsByUsernameAsync(string username);

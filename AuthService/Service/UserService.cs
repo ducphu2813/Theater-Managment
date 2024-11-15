@@ -3,6 +3,7 @@ using AuthService.Exceptions;
 using AuthService.Repository.Interface;
 using AuthService.Service.Interface;
 using AuthService.Token;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AuthService.Service;
 
@@ -33,6 +34,19 @@ public class UserService : IUserService
         if (user == null)
         {
             throw new NotFoundException($"User with id {id} was not found.");
+        }
+        
+        return user;
+    }
+    
+    //lấy user theo username
+    public async Task<User> GetUserByUsername(string username)
+    {
+        var user = await _userRepository.GetUserByUsername(username);
+        
+        if (user == null)
+        {
+            throw new NotFoundException($"User with username {username} was not found.");
         }
         
         return user;
@@ -78,6 +92,35 @@ public class UserService : IUserService
         }
         
         return _tokenProvider.Create(user);
+    }
+    
+    //hàm register
+    public async Task<User> RegisterAsync(RegisterRequest registerRequest)
+    {
+        var user = await _userRepository.GetUserByUsername(registerRequest.Username);
+        
+        if(user != null)
+        {
+            throw new InvalidOperationException($"User with username {registerRequest.Username} already exists.");
+        }
+        
+        var emailUser = await _userRepository.GetUserByEmail(registerRequest.Email);
+        
+        if(emailUser != null)
+        {
+            throw new InvalidOperationException($"User with email {registerRequest.Email} already exists.");
+        }
+        
+        User newUser = new User
+        {
+            Username = registerRequest.Username,
+            Password = registerRequest.Password,
+            Email = registerRequest.Email,
+            Roles = registerRequest.Roles,
+            Departments = registerRequest.Departments
+        };
+
+        return await _userRepository.Add(newUser);
     }
     
     //lấy tất cả role permission của user theo username

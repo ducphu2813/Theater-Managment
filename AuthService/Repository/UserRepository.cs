@@ -27,6 +27,13 @@ public class UserRepository : MongoDBRepository<User>, IUserRepository
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
     
+    //lấy user theo email
+    public async Task<User> GetUserByEmail(string email)
+    {
+        var filter = Builders<User>.Filter.Eq("Email", email);
+        return await _collection.Find(filter).FirstOrDefaultAsync();
+    }
+    
     //lấy tất cả user theo username và role
     public async Task<Dictionary<string, object>> GetAllAdvance(int page, int limit, string username, List<string> roles)
     {

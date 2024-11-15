@@ -18,9 +18,10 @@ public class UserIdInjectionMiddleware
     public async Task Invoke(HttpContext context)
     {
         
-        // bỏ qua middleware cho các endpoint không yêu cầu xác thực (ví dụ: /auth/api/login) 
+        // bỏ qua middleware cho các endpoint không yêu cầu xác thực (ví dụ: /auth/api/login, /auth/api/register) 
         if (context.Request.Path.StartsWithSegments("/auth/api/login") 
-            || context.Request.Path.StartsWithSegments("/auth/api/User"))
+            || context.Request.Path.StartsWithSegments("/auth/api/User")
+            || context.Request.Path.StartsWithSegments("/auth/api/register"))
         {
             await _next(context);
             return;
@@ -28,6 +29,24 @@ public class UserIdInjectionMiddleware
         
         if (context.User.Identity.IsAuthenticated)
         {
+            
+            //gán user id vào query string nếu là endpoint /auth/api/verify
+            if (context.Request.Path.StartsWithSegments("/auth/api/verify"))
+            {
+                // lấy params từ request
+                var query = context.Request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
+            
+                var userId = context.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+                Console.WriteLine("tìm thấy user id nè: "+userId);
+            
+                query["userId"] = userId;
+                //tạo lại query string mới với user id
+                context.Request.QueryString = QueryString.Create(query);
+            
+                //in thử query string mới
+                Console.WriteLine($"Query string mới: {context.Request.QueryString}");
+            }
+            
             // kiểm tra nếu là POST request hoặc PUT request và có body
             if ((context.Request.Method == "POST" || context.Request.Method == "PUT") && context.Request.ContentType.Contains("application/json"))
             {

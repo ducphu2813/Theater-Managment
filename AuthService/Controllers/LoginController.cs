@@ -23,6 +23,11 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginRequest user)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var result = await _userService.LoginAsync(user.Username, user.Password);
         
         if(result == "unauthorized")
@@ -31,6 +36,10 @@ public class LoginController : ControllerBase
             return Unauthorized();
         }
         
-        return Ok(result);
+        return Ok(new Dictionary<String, String>
+        {
+            {"status", "success"},
+            {"accessToken", result}
+        });
     }
 }
