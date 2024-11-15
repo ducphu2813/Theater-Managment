@@ -19,11 +19,12 @@ public class Program
         //disable csrf api
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll",
-                builder => builder.AllowAnyOrigin()
+            options.AddPolicy("AllowAll", policy =>
+                policy.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
+
         
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
