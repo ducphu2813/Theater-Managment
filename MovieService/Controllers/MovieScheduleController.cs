@@ -84,10 +84,10 @@ public class MovieScheduleController : ControllerBase
     public async Task<IActionResult> GetByShowDatesAsync()
     {
         //lấy param từ Request.QueryString
-        var showDateStrings = Request.Query["showDates"].ToList();
+        var showDateStrings = Request.Query["showDates"].ToString().Split(',');
         
         // nếu không có param nào
-        if (showDateStrings.Count == 0)
+        if (showDateStrings.Length == 0)
         {
             return BadRequest("No dates were provided.");
         }

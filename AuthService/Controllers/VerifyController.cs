@@ -1,4 +1,5 @@
-﻿using AuthService.Entity.Model;
+﻿using AuthService.Entity.DTO;
+using AuthService.Entity.Model;
 using AuthService.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,16 @@ public class VerifyController : ControllerBase
             return BadRequest("User not found");
         }
         
-        return Ok(user);
+        //tạo verified user dto
+        var verifiedUser = new VerifiedUserDTO
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            Roles = user.Roles,
+        };
+        
+        return Ok(verifiedUser);
     }
     
 }

@@ -179,6 +179,7 @@ public class MovieScheduleService : IMovieScheduleService
     //lấy lịch chiếu theo ngày chiếu
     public async Task<List<MovieScheduleDTO>> GetByShowDatesAsync(List<DateTime> showDates)
     {
+        
         //lấy tất cả lịch chiếu theo ngày chiếu
         var movieSchedules = await _movieScheduleRepository.GetByShowDatesAsync(showDates);
         
@@ -203,6 +204,18 @@ public class MovieScheduleService : IMovieScheduleService
             CreatedAt = ms.CreatedAt,
             Status = ms.Status
         }).ToList();
+        
+        //chỉnh sửa timezone
+        foreach (var movieSchedule in movieScheduleDtos)
+        {
+            movieSchedule.CreatedAt = movieSchedule.CreatedAt.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.CreatedAt.Value)
+                : (DateTime?)null;
+            
+            movieSchedule.ShowTime = movieSchedule.ShowTime.HasValue
+                ? TimeZoneHelper.ConvertToTimeZone(movieSchedule.ShowTime.Value)
+                : (DateTime?)null;
+        }
         
         return movieScheduleDtos;
     }
