@@ -52,7 +52,7 @@ public class MovieScheduleService : IMovieScheduleService
             Id = ms.Id,
             Movie = movieDict.ContainsKey(ms.MovieId) ? movieDict[ms.MovieId] : null,
             RoomNumber = ms.RoomNumber,
-            ShowTime = ms.ShowTime,
+            ShowTime = ms.ShowTime.HasValue ? TimeZoneHelper.ConvertToTimeZone(ms.ShowTime.Value) : (DateTime?)null,
             SingleSeatPrice = ms.SingleSeatPrice,
             CoupleSeatPrice = ms.CoupleSeatPrice,
             CreatedAt = ms.CreatedAt,
@@ -63,6 +63,56 @@ public class MovieScheduleService : IMovieScheduleService
         
         return result;
 
+    }
+    
+    //lấy lịch chiếu nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string>? movieIds
+        , List<string>? roomNumbers
+        , DateTime? fromShowTimes
+        , DateTime? toShowTimes
+        , string? sortByShowTime)
+    {
+        
+        //lấy data
+        var result = await _movieScheduleRepository.GetAllAdvance(
+            page
+            , limit
+            , movieIds
+            , roomNumbers
+            , fromShowTimes
+            , toShowTimes
+            , sortByShowTime);
+        
+        //lấy tất cả movie id từ movie schedule
+        var movieSchedules = result["records"] as List<MovieSchedule>;
+        var movieIdsFromSchedule = movieSchedules.Select(ms => ms.MovieId).Distinct().ToList();
+        
+        //lấy tất cả movie từ movie id
+        var movies = await _movieRepository.GetAllMovieAsyncById(movieIdsFromSchedule);
+        
+        //chuyển đổi thành Dictionary để dễ dàng truy cập
+        var movieDict = movies.ToDictionary(m => m.Id);
+        
+        //chuyển đổi MovieSchedule sang MovieScheduleDTO
+        var movieScheduleDtos = movieSchedules.Select(ms => new MovieScheduleDTO
+        {
+            Id = ms.Id,
+            Movie = movieDict.ContainsKey(ms.MovieId) ? movieDict[ms.MovieId] : null,
+            RoomNumber = ms.RoomNumber,
+            ShowTime = ms.ShowTime.HasValue ? TimeZoneHelper.ConvertToTimeZone(ms.ShowTime.Value) : (DateTime?)null,
+            SingleSeatPrice = ms.SingleSeatPrice,
+            CoupleSeatPrice = ms.CoupleSeatPrice,
+            CreatedAt = ms.CreatedAt,
+            Status = ms.Status
+        }).ToList();
+        
+        result["records"] = movieScheduleDtos;
+        
+        return result;
+        
     }
     
     //lấy lịch chiếu theo id phim
@@ -364,23 +414,6 @@ public class MovieScheduleService : IMovieScheduleService
         var addedMovieSchedule = await _movieScheduleRepository.AddListAsync(movieSchedule);
         return movieSchedule;
     }
-    
-    // public async Task<List<MovieSchedule>> AddListAsync(List<SaveMovieScheduleDTO> movieScheduleDtos)
-    // {
-    //     var movieSchedules = movieScheduleDtos.Select(ms => new MovieSchedule
-    //     {
-    //         MovieId = ms.MovieId,
-    //         RoomNumber = ms.RoomNumber,
-    //         ShowTime = ms.ShowTime,
-    //         SingleSeatPrice = ms.SingleSeatPrice,
-    //         CoupleSeatPrice = ms.CoupleSeatPrice,
-    //         CreatedAt = ms.CreatedAt,
-    //         Status = ms.Status
-    //     }).ToList();
-    //     
-    //     var addedMovieSchedules = await _movieScheduleRepository.AddListAsync(movieSchedules);
-    //     return addedMovieSchedules;
-    // }
 
     public async Task<MovieSchedule> UpdateAsync(string id, SaveMovieScheduleDTO movieScheduleDto)
     {

@@ -43,6 +43,39 @@ public class MovieScheduleController : ControllerBase
         return Ok(result);
     }
     
+    //lấy lịch chiếu nâng cao
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvanceAsync()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        //lấy ra các param tìm kiếm nâng cao
+        var movieIds = Request.Query["movieId"].ToString().Split(',').ToList();
+        var roomNumbers = Request.Query["roomNumbers"].ToString().Split(',').ToList();
+        var fromShowTimes = DateTime.TryParse(Request.Query["fromShowTimes"], out var parsedFromShowTimes)
+            ? parsedFromShowTimes.ToUniversalTime() //set về utc
+            : DateTime.MinValue; // giá trị mặc định
+        var toShowTimes = DateTime.TryParse(Request.Query["toShowTimes"], out var parsedToShowTimes)
+            ? parsedToShowTimes.ToUniversalTime() //set về utc
+            : DateTime.MinValue; // giá trị mặc định
+        string sortByShowTime = "";
+        sortByShowTime = Request.Query["sortByShowTime"].ToString().ToLower();
+        
+        var result = await _movieScheduleService.GetAllAdvance(
+            page
+            , limit
+            , movieIds
+            , roomNumbers
+            , fromShowTimes
+            , toShowTimes
+            , sortByShowTime);
+        
+        return Ok(result);
+    }
+    
     //lấy lịch chiếu theo id phim
     [HttpGet]
     [Route("movie/{movieId}")]

@@ -27,4 +27,14 @@ public interface IMovieScheduleService
     
     //xóa tất cả movie schedule
     Task DeleteAll();
+    
+    //lấy ;ịch chiếu năng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string>? movieIds
+        , List<string>? roomNumbers
+        , DateTime? fromShowTimes
+        , DateTime? toShowTimes
+        , string? sortByShowTime);
 }

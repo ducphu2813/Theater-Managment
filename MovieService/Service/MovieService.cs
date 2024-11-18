@@ -50,6 +50,7 @@ public class MovieService : IMovieService
 
     public async Task<movies> AddAsync(MovieDTO movieDto)
     {
+        
         var movie = new movies
         {
             Name = movieDto.Name,
@@ -60,7 +61,8 @@ public class MovieService : IMovieService
             Dub = movieDto.Dub,
             SubTitle = movieDto.SubTitle,
             Genres = movieDto.Genres,
-            Duration = movieDto.Duration
+            Duration = movieDto.Duration,
+            Poster = movieDto.Poster
         };
         
         return await _movieRepository.Add(movie);

@@ -11,4 +11,5 @@ public class MovieDTO
     public string? SubTitle { get; set; }
     public List<string>? Genres { get; set; }
     public int? Duration { get; set; }  //thời lượng phim tính bằng phút
+    public string? Poster { get; set; }
 }

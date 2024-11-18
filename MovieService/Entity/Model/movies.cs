@@ -20,6 +20,9 @@ public class movies
     
     [BsonRepresentation(BsonType.String)]
     public List<string>? Genres { get; set; }
+    
+    //tạm thời lưu ảnh trong thư mục của server
+    public string? Poster { get; set; }
 
     public movies(
         string name,

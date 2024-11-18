@@ -105,5 +105,79 @@ public class MovieScheduleRepository : MongoDBRepository<MovieSchedule>, IMovieS
         await _collection.DeleteManyAsync(Builders<MovieSchedule>.Filter.Empty);
     }
 
+    //tìm nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string>? movieIds
+        , List<string>? roomNumbers
+        , DateTime? fromShowTimes
+        , DateTime? toShowTimes
+        , string? sortByShowTime)
+    {
+        // tạo một list để lưu các sub filter
+        var subFilters = new List<FilterDefinition<MovieSchedule>>();
+
+        // param movieIds
+        if (movieIds != null && movieIds.Count > 0)
+        {
+            var movieIdFilters = movieIds.Select(m => Builders<MovieSchedule>.Filter.Eq(x => x.MovieId, m));
+            subFilters.Add(Builders<MovieSchedule>.Filter.Or(movieIdFilters));
+        }
+
+        // param roomNumbers
+        if (roomNumbers != null && roomNumbers.Count > 0)
+        {
+            var roomNumberFilters = roomNumbers.Select(r => Builders<MovieSchedule>.Filter.Eq(x => x.RoomNumber, r));
+            subFilters.Add(Builders<MovieSchedule>.Filter.Or(roomNumberFilters));
+        }
+
+        // param fromShowTimes
+        if (fromShowTimes != DateTime.MinValue)
+        {
+            var fromShowTimeFilter = Builders<MovieSchedule>.Filter.Gte(x => x.ShowTime, fromShowTimes);
+            subFilters.Add(fromShowTimeFilter);
+        }
+
+        // param toShowTimes
+        if (toShowTimes != DateTime.MinValue)
+        {
+            var toShowTimeFilter = Builders<MovieSchedule>.Filter.Lte(x => x.ShowTime, toShowTimes);
+            subFilters.Add(toShowTimeFilter);
+        }
+    
+        //gộp filter lại bằng OR
+        var combinedFilter = subFilters.Count > 0 ? Builders<MovieSchedule>.Filter.Or(subFilters) : Builders<MovieSchedule>.Filter.Empty;
+        
+        //tạo sort theo ShowTime
+        SortDefinition<MovieSchedule> sortDefinition = Builders<MovieSchedule>.Sort.Descending(x => x.ShowTime);
+        
+        if(sortByShowTime == "asc")
+        {
+            sortDefinition = Builders<MovieSchedule>.Sort.Ascending(x => x.ShowTime);
+        }
+        
+        //lấy total records
+        var total = await _collection.CountDocumentsAsync(combinedFilter);
+        
+        //lấy data
+        var data = await _collection
+            .Find(combinedFilter)           //sử dụng filter
+            .Sort(sortDefinition)           //sắp xếp
+            .Skip((page - 1) * limit)       //bỏ qua
+            .Limit(limit)                   //giới hạn
+            .ToListAsync();
+
+        // Tạo dữ liệu phân trang
+        var paging = new Dictionary<string, object>
+        {
+            {"totalRecords", total},
+            {"records", data},
+            {"page", page},
+            {"limit", limit}
+        };
+
+        return paging;
+    }
     
 }
