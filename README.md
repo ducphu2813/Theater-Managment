@@ -31,11 +31,8 @@ This project requires [.NET Core](https://dotnet.microsoft.com/download) and [Do
 git clone
 ```
 
-2. Navigate to the project directory:
+2. Navigate to the project directory
 
-```bash
-cd TheaterManagement
-```
 
 3. Run the following command to start the services:
 
