@@ -1,0 +1,1262 @@
+{
+	"info": {
+		"_postman_id": "c5c9dc27-27ac-49d8-b21f-e0e0e43d69ff",
+		"name": "Movie Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32289423"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Get all Users",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMxOTAyOTIzLCJpYXQiOjE3MzE4OTkzMjMsIm5iZiI6MTczMTg5OTMyM30.LDZCKir7gGvm4it-FAYxh9D0AJuINJWgcxqVvUyu6fM"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/auth/api/User"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all user advance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMyMTYwMTgxLCJpYXQiOjE3MzIxNTY1ODEsIm5iZiI6MTczMjE1NjU4MX0.vLufN2adQFgkoyaxq8i339DeK3v7nel5WnNsghmBp6M"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/auth/api/User/getAll"
+							},
+							"response": []
+						},
+						{
+							"name": "Create User (No Auth)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n    \"username\": \"tranthitrang\",\r\n    \"password\": \"12345\",\r\n    \"email\": \"tranthitrang@gmail.com\",\r\n    \"roles\": [\r\n      \"USER\",\r\n      \"ADMIN\"\r\n    ],\r\n    \"departments\": [\r\n     \r\n    ]\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/User"
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"ducphuuu\",\r\n    \"password\": \"12345\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/Login"
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"ducphuuu123\",\r\n    \"password\": \"12345\",\r\n    \"email\": \"email123@gmail.com\",\r\n    \"roles\": [\r\n        \"USER\"\r\n    ],\r\n    \"departments\": [\r\n        \r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/Register"
+							},
+							"response": []
+						},
+						{
+							"name": "Verify JWT",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMxOTAyOTY0LCJpYXQiOjE3MzE4OTkzNjQsIm5iZiI6MTczMTg5OTM2NH0.c_DVphIQzWXFORsLhyPEb-ZIcbpQfAf01-tpYtqk31w"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"ducphuuu\",\r\n    \"password\": \"12345\"  \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/Verify"
+							},
+							"response": []
+						},
+						{
+							"name": "Update User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMyMTYwMTgxLCJpYXQiOjE3MzIxNTY1ODEsIm5iZiI6MTczMjE1NjU4MX0.vLufN2adQFgkoyaxq8i339DeK3v7nel5WnNsghmBp6M"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"6703e9f3a243419befcc05a0\",\r\n    \"username\": \"hoanganh\",\r\n    \"password\": \"123456\",\r\n    \"email\": \"hoanganh@gmail.com\",\r\n    \"roles\": [\r\n        \"USER\",\r\n        \"IT\"\r\n    ],\r\n    \"departments\": [\r\n\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/User/6703e9f3a243419befcc05a0"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Role",
+					"item": [
+						{
+							"name": "Get All Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlmM2EyNDM0MTliZWZjYzA1YTAiLCJlbWFpbCI6ImhvYW5nYW5oQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiaG9hbmdhbmgiLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3Mjg1NTI0ODgsImlhdCI6MTcyODU0ODg4OCwibmJmIjoxNzI4NTQ4ODg4fQ.P7P59_uEapR_4aTZjTHiWn2OoZBmXd24zVhrxqLQqC8"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/auth/api/Role"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Role Permission by User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlmM2EyNDM0MTliZWZjYzA1YTAiLCJlbWFpbCI6ImhvYW5nYW5oQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiaG9hbmdhbmgiLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3Mjg1NTI0ODgsImlhdCI6MTcyODU0ODg4OCwibmJmIjoxNzI4NTQ4ODg4fQ.P7P59_uEapR_4aTZjTHiWn2OoZBmXd24zVhrxqLQqC8"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/auth/api/User/role-permission/hoanganh"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlmM2EyNDM0MTliZWZjYzA1YTAiLCJlbWFpbCI6ImhvYW5nYW5oQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiaG9hbmdhbmgiLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3Mjg1NTI0ODgsImlhdCI6MTcyODU0ODg4OCwibmJmIjoxNzI4NTQ4ODg4fQ.P7P59_uEapR_4aTZjTHiWn2OoZBmXd24zVhrxqLQqC8"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"RoleName\": \"ADMIN\",\r\n    \"Permissions\": [\r\n        {\r\n            \"Resource\": \"movies\",\r\n            \"Actions\": [\"C\", \"R\", \"U\", \"D\"]\r\n        },\r\n        {\r\n            \"Resource\": \"user\",\r\n            \"Actions\": [\"C\", \"R\", \"U\", \"D\"]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/auth/api/Role"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reservation",
+			"item": [
+				{
+					"name": "Seat",
+					"item": [
+						{
+							"name": "Get All Seat",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwNzc2NTkzLCJpYXQiOjE3MzA3NzI5OTMsIm5iZiI6MTczMDc3Mjk5M30.45W0PIBPKC_wLCvvfgYRDDccepNvMHMR0IzsKYf6GUo"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Seat"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Seat By RoomNumber",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwNzMyMTExLCJpYXQiOjE3MzA3Mjg1MTEsIm5iZiI6MTczMDcyODUxMX0.X7e8o5XSLXFhDpabMfjWe33wgaYY2Ckl7UNYwakuVcs"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Seat/room/02"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Seat",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzU4MDE1LCJpYXQiOjE3MzAzNTQ0MTUsIm5iZiI6MTczMDM1NDQxNX0.CVuCq0xH6f4Y59w7eu4uUzGqwGTncv9NhM_3w60q3Tw"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"roomNumber\": \"02\",\r\n        \"row\": \"A\",\r\n        \"column\": \"2\",\r\n        \"seatType\": \"single\"\r\n    },\r\n    {\r\n        \"roomNumber\": \"02\",\r\n        \"row\": \"A\",\r\n        \"column\": \"3\",\r\n        \"seatType\": \"single\"\r\n    },\r\n    {\r\n        \"roomNumber\": \"02\",\r\n        \"row\": \"A\",\r\n        \"column\": \"4\",\r\n        \"seatType\": \"single\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Seat/addList"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Many Seat",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwNzc2NTkzLCJpYXQiOjE3MzA3NzI5OTMsIm5iZiI6MTczMDc3Mjk5M30.45W0PIBPKC_wLCvvfgYRDDccepNvMHMR0IzsKYf6GUo"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"id\": \"670dd0f2fc268fa59dae9e6a\",\r\n        \"roomNumber\": \"01\",\r\n        \"row\": \"A\",\r\n        \"column\": \"1\",\r\n        \"seatType\": \"single\"\r\n    },\r\n    {\r\n        \"id\": \"670dd0fafc268fa59dae9e6b\",\r\n        \"roomNumber\": \"01\",\r\n        \"row\": \"A\",\r\n        \"column\": \"2\",\r\n        \"seatType\": \"single\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Seat/updateList"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ticket",
+					"item": [
+						{
+							"name": "Get All Ticket",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Ticket"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Ticket Advance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NzA0MjgsImlhdCI6MTczMDk2NjgyOCwibmJmIjoxNzMwOTY2ODI4fQ.LEOoh4zocLFiwft4wn3Nm-5FhEGLQ00oDP4ihw2-W6U"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/reservation/api/Ticket/getAll?sortByTotalPrice=desc&fromCreateDate=2024-11-01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"reservation",
+										"api",
+										"Ticket",
+										"getAll"
+									],
+									"query": [
+										{
+											"key": "sortByTotalPrice",
+											"value": "desc"
+										},
+										{
+											"key": "fromCreateDate",
+											"value": "2024-11-01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get 1 Ticket",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMTk3NTI3LCJpYXQiOjE3MzAxOTM5MjcsIm5iZiI6MTczMDE5MzkyN30.3THWNlsv3CloyJfKUQwAgjfIJXRkfc-sjqWunkfWOaY"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Ticket/6720aafd50410cda37083e75"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Ticket By User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzY0OTA5LCJpYXQiOjE3MzAzNjEzMDksIm5iZiI6MTczMDM2MTMwOX0.SY1j-6mIsqkSaHjPgzIb0m8IT6TR95-QN2zwYBBnpTY"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Ticket/user/6703e9d9a243419befcc059f"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Ticket",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTM2OTEsImlhdCI6MTczMDk1MDA5MSwibmJmIjoxNzMwOTUwMDkxfQ.O1ZtvrfEJgvbFI_aoXyFWt3_bp0hg6NL0iPaiEt9sHI"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"MovieScheduleId\": \"672c304ea006999b915d83b8\",\r\n    \"SeatId\": [\r\n        \"670dd0f2fc268fa59dae9e6a\"\r\n    ],\r\n    \"FoodId\" : [\r\n        \"abc\", \"xyz\"\r\n    ],\r\n    \"TotalTicket\": 1,\r\n    \"TotalPrice\": 1,\r\n    \"UserId\": \"yes\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Ticket"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Ticket By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTM2OTEsImlhdCI6MTczMDk1MDA5MSwibmJmIjoxNzMwOTUwMDkxfQ.O1ZtvrfEJgvbFI_aoXyFWt3_bp0hg6NL0iPaiEt9sHI"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"MovieScheduleId\": \"672c304ea006999b915d83b8\",\r\n    \"SeatId\": [\r\n        \"670dd0fafc268fa59dae9e6b\",\r\n        \"670dd0f2fc268fa59dae9e6a\"\r\n    ],\r\n    \"FoodId\": [\r\n        \"67109035121b52363d7d4ba3\"\r\n    ],\r\n    \"TotalTicket\": 1,\r\n    \"TotalPrice\": 1,\r\n    \"UserId\": \"yes\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Ticket/672c34057e0d458472f87475"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Ticket By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTM2OTEsImlhdCI6MTczMDk1MDA5MSwibmJmIjoxNzMwOTUwMDkxfQ.O1ZtvrfEJgvbFI_aoXyFWt3_bp0hg6NL0iPaiEt9sHI"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"MovieScheduleId\": \"672c304ea006999b915d83b8\",\r\n    \"SeatId\": [\r\n        \"670dd0fafc268fa59dae9e6b\",\r\n        \"670dd0f2fc268fa59dae9e6a\"\r\n    ],\r\n    \"FoodId\": [\r\n        \"67109035121b52363d7d4ba3\"\r\n    ],\r\n    \"TotalTicket\": 1,\r\n    \"TotalPrice\": 1,\r\n    \"UserId\": \"yes\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Ticket/672c34057e0d458472f87475"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete ALL Ticket",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQzNjY0LCJpYXQiOjE3MzAzNDAwNjQsIm5iZiI6MTczMDM0MDA2NH0.CULN0d7iTPlloSU_3EFA5tGg030ZozPssE6OEzSJay0"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Ticket/removeAll"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Food",
+					"item": [
+						{
+							"name": "Get All Food",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Food"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Food",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI5MTQyMjgzLCJpYXQiOjE3MjkxMzg2ODMsIm5iZiI6MTcyOTEzODY4M30.3_ipSRKt7V1pgkEcwkKiDT9Lzo6k3XIgTb7FoDh754s"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Name\": \"Combo Bắp Size nhỏ Cola Size nhỏ\",\r\n    \"FoodType\": \"smallfood\",\r\n    \"Description\": \"Combo này hơi nhỏ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Food"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Food",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI5NzQ2NDgyLCJpYXQiOjE3Mjk3NDI4ODIsIm5iZiI6MTcyOTc0Mjg4Mn0.-u1B6IPzgrAzk_DDGr06mj_DWP_ZpQDRZOSe-VJUnU4"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"id\": \"67109049121b52363d7d4ba4\",\r\n        \"name\": \"Combo Bắp Size nhỏ Cola Size nhỏ\",\r\n        \"foodType\": \"smallfood\",\r\n        \"description\": \"Combo này hơi nhỏ\",\r\n        \"amount\": 65000\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Food/67109049121b52363d7d4ba4"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Discount",
+					"item": [
+						{
+							"name": "Get All Discount",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/reservation/api/Discount"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Discount",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI5MTQ5NTYzLCJpYXQiOjE3MjkxNDU5NjMsIm5iZiI6MTcyOTE0NTk2M30.WzidzabWR2YhL8dkXjhzvfvQTWtK807-d1GV8iZBlS0"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"FoodType\": \"mediumfood\",\r\n    \"SeatType\": \"double\",\r\n    \"PercentOff\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/reservation/api/Discount"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "Movie",
+					"item": [
+						{
+							"name": "Get All Movies",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/Movie"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie Advance",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/Movie/getAll"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie By ID",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/Movie/66fe10e26e32465aabbdff20"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Movie",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlmM2EyNDM0MTliZWZjYzA1YTAiLCJlbWFpbCI6ImhvYW5nYW5oQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiaG9hbmdhbmgiLCJyb2xlcyI6WyJVU0VSIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMyMTYwNDQxLCJpYXQiOjE3MzIxNTY4NDEsIm5iZiI6MTczMjE1Njg0MX0.o5Izid_nPuO0JgZ_QpigTq_2xNe64nxso2t_Trq4fQc"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \r\n        \"name\": \"This is mu kingdom come\",\r\n        \"director\": \"Duc Phu\",\r\n        \"actors\": \"1 mình tao\",\r\n        \"author\": \"Duc Phu\",\r\n        \"description\": \"Phim riêng tư\",\r\n        \"dub\": \"Tiếng Việt\",\r\n        \"subTitle\": \"Tiếng Việt\",\r\n        \"genres\": [\r\n            \"Sex\"\r\n        ],\r\n        \"duration\": 80,\r\n        \"poster\": \"Bỏ cái đường dẫn đến ảnh của m vào đây\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/Movie"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Movie",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQzNjY0LCJpYXQiOjE3MzAzNDAwNjQsIm5iZiI6MTczMDM0MDA2NH0.CULN0d7iTPlloSU_3EFA5tGg030ZozPssE6OEzSJay0"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"duration\": 80\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/Movie/670d1e39b77f120de12c06b5"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Movie By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQzNjY0LCJpYXQiOjE3MzAzNDAwNjQsIm5iZiI6MTczMDM0MDA2NH0.CULN0d7iTPlloSU_3EFA5tGg030ZozPssE6OEzSJay0"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"duration\": 80\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/Movie/{movie_id}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Movie Schedule",
+					"item": [
+						{
+							"name": "Get All Movies Schedule",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/MovieSchedule"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movies Schedule Advance",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/movies/api/MovieSchedule/getAll?roomNumbers=02",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"movies",
+										"api",
+										"MovieSchedule",
+										"getAll"
+									],
+									"query": [
+										{
+											"key": "roomNumbers",
+											"value": "02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movies Schedule By ID",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/MovieSchedule/672c304ea006999b915d83b8"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Schedule By Movie",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/MovieSchedule/movie/66fe10e26e32465aabbdff20"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Schedule By Dates",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/movies/api/MovieSchedule/showDates?showDates=2024-11-11&showDates=2024-11-13",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"movies",
+										"api",
+										"MovieSchedule",
+										"showDates"
+									],
+									"query": [
+										{
+											"key": "showDates",
+											"value": "2024-11-11"
+										},
+										{
+											"key": "showDates",
+											"value": "2024-11-13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Movies Schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMxOTI2NzIxLCJpYXQiOjE3MzE5MjMxMjEsIm5iZiI6MTczMTkyMzEyMX0.jvkiqOILM_3egK4akMCb1W1z5rr3k0wkznOBGEtrYlM"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"movieId\": \"670bcc9cd919357343155044\",\r\n        \"ScheduleDetails\": [\r\n            {\r\n                \"roomNumber\": \"02\",\r\n                \"showTime\": \"2024-12-15T20:30:00\",\r\n                \"singleSeatPrice\": 40000,\r\n                \"coupleSeatPrice\": 70000,\r\n                \"createdAt\": \"2024-11-06T13:36:00\",\r\n                \"status\": \"Mở bán\"\r\n            },\r\n            {\r\n                \"roomNumber\": \"02\",\r\n                \"showTime\": \"2024-12-16T20:30:00\",\r\n                \"singleSeatPrice\": 40000,\r\n                \"coupleSeatPrice\": 70000,\r\n                \"createdAt\": \"2024-11-06T13:36:00\",\r\n                \"status\": \"Mở bán\"\r\n            }\r\n        ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/MovieSchedule"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Movies Schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI4OTYwMzA5LCJpYXQiOjE3Mjg5NTY3MDksIm5iZiI6MTcyODk1NjcwOX0.exuEM1kWUirdxRUeFfb1RMYV7AfuPeA5eJRh98RZgVM"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"movieId\": \"670d1e39b77f120de12c06b5\",\r\n        \"showTime\": \"2024-11-12T03:00:00\",\r\n        \"singleSeatPrice\": 150000,\r\n        \"coupleSeatPrice\": 170000,\r\n        \"status\": \"Mở bán\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/MovieSchedule/670dc9fab45105b6d80d7fa3"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Movie Schedule By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI5MDg5MDIzLCJpYXQiOjE3MjkwODU0MjMsIm5iZiI6MTcyOTA4NTQyM30.ad3L77H1SVQO-dyfjLHDt2gzjhB-ul4shpFb1LM9kFA"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"movieId\": \"670d1e39b77f120de12c06b5\",\r\n        \"showTime\": \"2024-11-12T03:00:00\",\r\n        \"singleSeatPrice\": 150000,\r\n        \"coupleSeatPrice\": 170000,\r\n        \"status\": \"Mở bán\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/MovieSchedule/{movie_schedule_id)"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Movie Schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQ0Njg5LCJpYXQiOjE3MzAzNDEwODksIm5iZiI6MTczMDM0MTA4OX0.xsJXDeduU-lzdcXcMwHzJQOstEVTHOmfqSfRFsaba4I"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"movieId\": \"670d1e39b77f120de12c06b5\",\r\n        \"showTime\": \"2024-11-12T03:00:00\",\r\n        \"singleSeatPrice\": 150000,\r\n        \"coupleSeatPrice\": 170000,\r\n        \"status\": \"Mở bán\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/MovieSchedule/deleteAll"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Room",
+					"item": [
+						{
+							"name": "Get All Room",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/movies/api/Room"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Room",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzUyNDc1LCJpYXQiOjE3MzAzNDg4NzUsIm5iZiI6MTczMDM0ODg3NX0.0roplivwMmhMfwTjxOpoXho7PCxlYWhNwVnGlFuNwYQ"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"roomNumber\": \"02\",\r\n    \"AvailableSeat\": 100,\r\n    \"SingleSeat\": 95,\r\n    \"CoupleSeat\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5006/movies/api/Room"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Consul",
+			"item": [
+				{
+					"name": "Delete Service",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8500/v1/agent/service/deregister/reservation-service-1207192154"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8500/v1/catalog/service"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "Get URL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"OrderType\": \"online\",\r\n    \"TicketID\": \"672c31f8f9351c09ccdf52f0\",\r\n    \"Amount\": 100000,\r\n    \"OrderDescription\": \"672c31f8f9351c09ccdf52f0\",\r\n    \"Name\": \"Lmao\",\r\n    \"UserId\": \"yes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5006/payment/api/Payment/create_payment_url"
+					},
+					"response": []
+				},
+				{
+					"name": "Return URL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5006/payment/api/Payment/payment_result?vnp_Amount=26885000&vnp_BankCode=NCB&vnp_BankTranNo=VNP14655805&vnp_CardType=ATM&vnp_OrderInfo=672c31f8f9351c09ccdf52f0&vnp_PayDate=20241107102607&vnp_ResponseCode=00&vnp_TmnCode=O6B1X7E4&vnp_TransactionNo=14655805&vnp_TransactionStatus=00&vnp_TxnRef=638665719331826193&vnp_SecureHash=456acfc503276ab873b27af90a1e13fe9be4cbd5f9ac53824c7cb91b59601fc508845ca0271336dcc9f8b116f468ccf5d9cc2fcb12623227f9cdde617aa16a64",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5006",
+							"path": [
+								"payment",
+								"api",
+								"Payment",
+								"payment_result"
+							],
+							"query": [
+								{
+									"key": "vnp_Amount",
+									"value": "26885000"
+								},
+								{
+									"key": "vnp_BankCode",
+									"value": "NCB"
+								},
+								{
+									"key": "vnp_BankTranNo",
+									"value": "VNP14655805"
+								},
+								{
+									"key": "vnp_CardType",
+									"value": "ATM"
+								},
+								{
+									"key": "vnp_OrderInfo",
+									"value": "672c31f8f9351c09ccdf52f0"
+								},
+								{
+									"key": "vnp_PayDate",
+									"value": "20241107102607"
+								},
+								{
+									"key": "vnp_ResponseCode",
+									"value": "00"
+								},
+								{
+									"key": "vnp_TmnCode",
+									"value": "O6B1X7E4"
+								},
+								{
+									"key": "vnp_TransactionNo",
+									"value": "14655805"
+								},
+								{
+									"key": "vnp_TransactionStatus",
+									"value": "00"
+								},
+								{
+									"key": "vnp_TxnRef",
+									"value": "638665719331826193"
+								},
+								{
+									"key": "vnp_SecureHash",
+									"value": "456acfc503276ab873b27af90a1e13fe9be4cbd5f9ac53824c7cb91b59601fc508845ca0271336dcc9f8b116f468ccf5d9cc2fcb12623227f9cdde617aa16a64"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTI2MzksImlhdCI6MTczMDk0OTAzOSwibmJmIjoxNzMwOTQ5MDM5fQ.LCBsMeMkxf9Vvr5LCkrSSXb-pW7EKXwf28Hq9Fy6ggs"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5006/payment/api/Payment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQzNjY0LCJpYXQiOjE3MzAzNDAwNjQsIm5iZiI6MTczMDM0MDA2NH0.CULN0d7iTPlloSU_3EFA5tGg030ZozPssE6OEzSJay0"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5006/payment/api/Payment/remove_all"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Movie Sale",
+					"item": [
+						{
+							"name": "Get All Movie Sale",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5OTI1MTQsImlhdCI6MTczMDk4ODkxNCwibmJmIjoxNzMwOTg4OTE0fQ.x06i-Xk7ACH0N98T1_81rKgW1fNuJZq-OtOvl2vY51A"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/admin/api/MovieSale"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie Sale Advance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5OTI1MTQsImlhdCI6MTczMDk4ODkxNCwibmJmIjoxNzMwOTg4OTE0fQ.x06i-Xk7ACH0N98T1_81rKgW1fNuJZq-OtOvl2vY51A"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/admin/api/MovieSale/getAll?fromCreateDate=2024-11-01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"admin",
+										"api",
+										"MovieSale",
+										"getAll"
+									],
+									"query": [
+										{
+											"key": "fromCreateDate",
+											"value": "2024-11-01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie Sale By User ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzY0OTA5LCJpYXQiOjE3MzAzNjEzMDksIm5iZiI6MTczMDM2MTMwOX0.SY1j-6mIsqkSaHjPgzIb0m8IT6TR95-QN2zwYBBnpTY"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/admin/api/MovieSale/userId/{userId}"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie Sale By Payment ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzY0OTA5LCJpYXQiOjE3MzAzNjEzMDksIm5iZiI6MTczMDM2MTMwOX0.SY1j-6mIsqkSaHjPgzIb0m8IT6TR95-QN2zwYBBnpTY"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:5006/admin/api/MovieSale/paymentId/{paymentId}"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Movie Sale By Params",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzM2RmMTM5NWEyMGFkOWZmMGZiNzEiLCJlbWFpbCI6InRyYW50aGl0cmFuZ0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6InRyYW50aGl0cmFuZyIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJhdWQiOiJUaGVhdGVyVXNlciIsImlzcyI6IlRoZWF0ZXIiLCJleHAiOjE3MzA5NTM2OTEsImlhdCI6MTczMDk1MDA5MSwibmJmIjoxNzMwOTUwMDkxfQ.O1ZtvrfEJgvbFI_aoXyFWt3_bp0hg6NL0iPaiEt9sHI"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/admin/api/MovieSale/dateRange?from=2024-10-31&to=2024-11-07",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"admin",
+										"api",
+										"MovieSale",
+										"dateRange"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "2024-10-31"
+										},
+										{
+											"key": "to",
+											"value": "2024-11-07"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all Movie Sale",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzA3NTM4OTAyN2FmNDUyYzQ0ODY1YjMiLCJlbWFpbCI6Im5ndXllbnZhbmFAZ21haWwuY29tIiwidXNlcm5hbWUiOiJuZ3V5ZW52YW5hIiwicm9sZXMiOlsiVVNFUiIsIkFETUlOIiwiSVQiXSwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzMwMzQzNjY0LCJpYXQiOjE3MzAzNDAwNjQsIm5iZiI6MTczMDM0MDA2NH0.CULN0d7iTPlloSU_3EFA5tGg030ZozPssE6OEzSJay0"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "http://localhost:5006/admin/api/MovieSale/deleteAll"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "ducphuuu",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzAzZTlkOWEyNDM0MTliZWZjYzA1OWYiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZHVjcGh1dXUiLCJyb2xlcyI6IkFETUlOIiwiYXVkIjoiVGhlYXRlclVzZXIiLCJpc3MiOiJUaGVhdGVyIiwiZXhwIjoxNzI5MTI5OTYwLCJpYXQiOjE3MjkxMjYzNjAsIm5iZiI6MTcyOTEyNjM2MH0.RI3hQRYjXmTBqo3LKVZgS97ztQCJRgmFLLp7cbTJLac"
+		}
+	]
+}
