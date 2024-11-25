@@ -35,6 +35,15 @@ public class LoginController : ControllerBase
             //trả về mã 401 unauthorized
             return Unauthorized();
         }
+
+        if (result == "notmailverified")
+        {
+            return BadRequest(new Dictionary<String, String>
+            {
+                {"status", "fail"},
+                {"message", "Please verify your email before login."}
+            });
+        }
         
         return Ok(new Dictionary<String, String>
         {

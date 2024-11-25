@@ -11,12 +11,14 @@ namespace AuthService.Controllers;
 public class RegisterController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
     
-    public RegisterController(IUserService userService)
+    public RegisterController(IUserService userService
+    , IEmailService emailService)
     {
         _userService = userService;
+        _emailService = emailService;
     }
-    
     
     [AllowAnonymous]
     [HttpPost]
@@ -29,11 +31,20 @@ public class RegisterController : ControllerBase
         }
         
         //lưu thông tin user vào database
-        //catch exception nếu user đã tồn tại
+        //catch các exception
         User result;
         try
         {
             result = await _userService.RegisterAsync(registerRequest);
+            
+            //gửi mail xác nhận
+            await _emailService.SendEmailAsync(result.Email, "Confirm Email", "Click here to confirm email: http://localhost:5006/auth/api/Mail/confirm?email=" + result.Email + "&token=" + result.confirmMailToken);
+        
+            return Ok(new Dictionary<String, String>
+            {
+                {"status", "success"},
+                {"message", "Please check your email to confirm your account."}
+            });
         }
         catch (Exception e)
         {
@@ -43,14 +54,5 @@ public class RegisterController : ControllerBase
                 {"message", e.Message}
             });
         }
-        
-        //login sau khi register
-        var loginResult = await _userService.LoginAsync(result.Username, result.Password);
-        
-        return Ok(new Dictionary<String, String>
-        {
-            {"status", "success"},
-            {"accessToken", loginResult}
-        });
     }
 }

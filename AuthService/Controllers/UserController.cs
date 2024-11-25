@@ -1,4 +1,5 @@
-﻿using AuthService.Entity.Model;
+﻿using AuthService.Entity.DTO;
+using AuthService.Entity.Model;
 using AuthService.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -92,4 +93,74 @@ public class UserController : ControllerBase
         var result = await _userService.GetRolePermissionsByUsernameAsync(username);
         return Ok(result);
     }
+    
+    //quên mật khẩu
+    [HttpGet]
+    [Route("forgotPassword/{email}")]
+    public async Task<IActionResult> ForgotPasswordAsync(string email)
+    {
+        try
+        {
+            var result = await _userService.ForgotPasswordAsync(email);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok( new Dictionary<string, string>
+                {
+                    {"status", "success"},
+                    {"message", "Please check your email for reset password code."}
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest( new Dictionary<string, string>
+            {
+                {"status", "error"},
+                {"message", e.Message}
+            });
+        }
+        
+    }
+    
+    //reset mật khẩu
+    [HttpPost]
+    [Route("resetPassword")]
+    public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest resetPasswordRequest)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.ResetPasswordAsync(resetPasswordRequest);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok( new Dictionary<string, string>
+                {
+                    {"status", "success"},
+                    {"message", "Reset password success, please login to continue."}
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest( new Dictionary<string, string>
+            {
+                {"status", "error"},
+                {"message", e.Message}
+            });
+        }
+        
+        
+    }
+    
 }

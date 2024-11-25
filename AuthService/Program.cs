@@ -1,6 +1,7 @@
 using System.Text;
 using AuthService.Context;
 using AuthService.Entity;
+using AuthService.Mail;
 using AuthService.Repository;
 using AuthService.Repository.Interface;
 using AuthService.Repository.MongoDBRepo;
@@ -37,14 +38,19 @@ public class Program
         //đăng ký MongoDBContext
         builder.Services.AddScoped<MongoDBContext>();
         
+        //đăng ký EmailSettings từ appsettings.json
+        builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+        
         //đăng ký các Repository
         builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoDBRepository<>));
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+        builder.Services.AddScoped<IResetPasswordRepository, ResetPasswordRepository>();
         
         //đăng ký các Service
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IRoleService, RoleService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         
         //thêm phần xác thực jwt
         // builder.Services.AddAuthorization();

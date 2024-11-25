@@ -20,6 +20,7 @@ public class UserIdInjectionMiddleware
         
         // bỏ qua middleware cho các endpoint không yêu cầu xác thực (ví dụ: /auth/api/login, /auth/api/register) 
         if (context.Request.Path.StartsWithSegments("/auth/api/login") 
+            || context.Request.Path.StartsWithSegments("/auth/api/Mail")
             || context.Request.Path.StartsWithSegments("/auth/api/User")
             || context.Request.Path.StartsWithSegments("/auth/api/register")
             || ( (context.Request.Path.StartsWithSegments("/movies/api/Movie") 
@@ -29,7 +30,7 @@ public class UserIdInjectionMiddleware
                  || context.Request.Path.StartsWithSegments("/movies/api/Room")
                  || context.Request.Path.StartsWithSegments("/movies/api/MovieSchedule/movie")
                  || context.Request.Path.StartsWithSegments("/movies/api/MovieSchedule/showDates"))
-                 && context.Request.Method == "GET") )
+                 && context.Request.Method == "GET"))
         {
             await _next(context);
             return;

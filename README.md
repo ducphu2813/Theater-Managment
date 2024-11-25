@@ -18,6 +18,7 @@ This project is designed to explore the microservice architecture and gain pract
 
 - **User Management**: Register, login, and manage user accounts.
 - **Movie Management**: Add, update, and delete movies.
+- **Movie Schedule Management**: Create, update, check schedules for movies, including showtimes and room number.
 - **Booking Management**: Book tickets for movies.
 - **Payment Gateway**: Process payments for bookings.
 

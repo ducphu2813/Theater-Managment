@@ -1,4 +1,5 @@
-﻿using AuthService.Entity.Model;
+﻿using AuthService.Entity.DTO;
+using AuthService.Entity.Model;
 
 namespace AuthService.Service.Interface;
 
@@ -24,4 +25,16 @@ public interface IUserService
     
     //lấy tất cả user theo username và role
     Task<Dictionary<string, object>> GetAllAdvance(int page, int limit, string username, List<string> roles);
+    
+    //tìm user theo mail
+    Task<User> GetUserByEmail(string email);
+    
+    //hàm xác nhận mail
+    Task<User> ConfirmEmailAsync(string email, string token);
+    
+    //quên mật khẩu
+    Task<User> ForgotPasswordAsync(string email);
+    
+    //đổi mật khẩu của quên mật khẩu
+    Task<User> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
 }

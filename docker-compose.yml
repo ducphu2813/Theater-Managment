@@ -40,6 +40,27 @@ services:
       - mongo-data:/data/db
     networks:
       - theater_network
+  
+  ##############
+  # mongo express service
+#  mongo-express:
+#    image: mongo-express
+#    container_name: mongo-express
+#    depends_on:
+#      - mongo
+#    ports:
+#      - "8081:8081"
+#    environment:
+##      ME_CONFIG_MONGODB_SERVER: mongo
+#      ME_CONFIG_MONGODB_URL: "mongodb://admin:password@mongo:27017/"
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+#      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: password
+#    networks:
+#      - theater_network
+      
       
   ##############
   #gateway service
@@ -176,6 +197,8 @@ services:
       - CONSUL__HOST=consul
       - CONSUL__PORT=8500
       - TZ=Asia/Ho_Chi_Minh
+      - VnPay__TmnCode=your-real-tmn-code
+      - VnPay__HashSecret=your-real-hash-secret
     networks:
       - theater_network
   
