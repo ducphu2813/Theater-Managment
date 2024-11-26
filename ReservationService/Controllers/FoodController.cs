@@ -30,6 +30,22 @@ public class FoodController : ControllerBase
         return Ok(result);
     }
     
+    //lấy danh sách food nâng cao
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvanceAsync()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        //lấy ra các param tìm kiếm nâng cao
+        var foodType = Request.Query["foodType"].ToString().Split(',').ToList();
+        
+        var result = await _foodService.GetAllAdvance(page, limit, foodType);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddAsync([FromBody] Food food)
     {

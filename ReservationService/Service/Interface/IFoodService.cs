@@ -10,4 +10,9 @@ public interface IFoodService
     Task<Food> UpdateAsync(string id, Food food);
     Task<bool> RemoveAsync(string id);
     
+    //hàm tìm food nâng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> foodType);
 }

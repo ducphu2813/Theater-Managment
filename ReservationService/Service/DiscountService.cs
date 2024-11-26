@@ -23,6 +23,14 @@ public class DiscountService : IDiscountService
     {
         return await _discountRepository.GetById(id) ?? throw new NotFoundException($"Discount with id {id} was not found.");
     }
+    
+    //hàm tìm nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit)
+    {
+        return await _discountRepository.GetAllAdvance(page, limit);
+    }
 
     public async Task<Discount> AddAsync(Discount discount)
     {

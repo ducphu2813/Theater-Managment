@@ -29,7 +29,19 @@ public class DiscountController : ControllerBase
         var result = await _discountService.GetByIdAsync(id);
         return Ok(result);
     }
-    
+
+    [HttpGet]
+    [Route("getAll")]
+    public async Task<IActionResult> GetAllAdvanceAsync()
+    {
+        //lấy ra các param phân trang
+        var page = int.Parse(Request.Query["page"]);
+        var limit = int.Parse(Request.Query["limit"]);
+        
+        var result = await _discountService.GetAllAdvance(page, limit);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddAsync([FromBody] Discount discount)
     {

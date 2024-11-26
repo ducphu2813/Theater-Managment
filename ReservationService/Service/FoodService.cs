@@ -53,4 +53,13 @@ public class FoodService : IFoodService
         return await _foodRepository.Remove(id);
     }
     
+    //hàm tìm food nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit
+        , List<string> foodType)
+    {
+        return await _foodRepository.GetAllAdvance(page, limit, foodType);
+    }
+    
 }

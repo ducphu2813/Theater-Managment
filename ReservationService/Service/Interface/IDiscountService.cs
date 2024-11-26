@@ -9,4 +9,9 @@ public interface IDiscountService
     Task<Discount> AddAsync(Discount discount);
     Task<Discount> UpdateAsync(string id, Discount discount);
     Task<bool> RemoveAsync(string id);
+    
+    //hàm tìm nâng cao
+    Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit);
 }

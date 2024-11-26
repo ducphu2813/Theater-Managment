@@ -21,4 +21,27 @@ public class DiscountRepository : MongoDBRepository<Discount>, IDiscountReposito
         return await _collection.Find(filter).ToListAsync();
     }
     
+    //hàm tìm nâng cao
+    public async Task<Dictionary<string, object>> GetAllAdvance(
+        int page
+        , int limit)
+    {
+        //lấy record theo page và limit
+        var records = await _collection.Find(_ => true)
+            .Skip((page - 1) * limit)
+            .Limit(limit)
+            .ToListAsync();
+        
+        //tổng record
+        var totalRecords = await _collection.CountDocumentsAsync(_ => true);
+        
+        return new Dictionary<string, object>
+        {
+            { "totalRecords", totalRecords },
+            { "records", records },
+            { "limit", limit },
+            { "page", page }
+        };
+    }
+    
 }
