@@ -316,6 +316,9 @@ public class TicketService : ITicketService
             
         }
         
+        ticketToUpdate.SeatId = updateTicketDto.SeatId;
+        ticketToUpdate.FoodId = updateTicketDto.FoodId;
+        
         //lấy single seat price và double seat price lưu thành 1 dictionary
         Dictionary<String, int> seatPrice = new Dictionary<string, int>();
         seatPrice.Add("singleSeatPrice", movieSchedule.SingleSeatPrice ?? 0);
@@ -384,9 +387,9 @@ public class TicketService : ITicketService
         ticket.TotalAmount = 0;
         
         //kiểm tra xem FoodId của ticket có null không
-        if (ticket.FoodId != null)
+        if (ticket.FoodId != null && ticket.FoodId.Count > 0)
         {
-            Console.WriteLine("food id là : "+ticket.FoodId);
+            Console.WriteLine("food id là : "+ticket.FoodId.Count());
             //lấy tất cả food id trong ticket
             var foodIds = ticket.FoodId;
             
@@ -394,7 +397,6 @@ public class TicketService : ITicketService
             var foods = await _foodRepository.GetByFoodIdAsync(foodIds);
             Console.WriteLine("tìm thấy "+foods.Count+" food");
             
-            //nếu không có food nào thì được tìm thấy theo id thì không làm gì cả
             if (foods.Count != 0)
             {
                 if (ticket.FoodDetail == null)
@@ -414,6 +416,18 @@ public class TicketService : ITicketService
                 }
                 ticket.BaseAmount += foodAmount;
             }
+            else
+            {
+                //không có food nào được tìm thấy theo id thì xóa hết food detail của ticket
+                ticket.FoodDetail = null;
+                ticket.FoodId = null;
+            }
+        }
+        else
+        {
+            //không có food nào được tìm thấy theo id thì xóa hết food detail của ticket
+            ticket.FoodDetail = null;
+            ticket.FoodId = null;
         }
         
         //tính base amount cho ticket dựa trên số lượng ghế
@@ -431,6 +445,10 @@ public class TicketService : ITicketService
         }
         Console.WriteLine("Bắt đầu cộng tiền của seat");
         ticket.BaseAmount += seatAmount;
+        
+        //reset lại discount của ticket
+        ticket.DiscountDetail = null;
+        ticket.DiscountId = null;
         
         //kiểm tra xem DiscountId của ticket có null không
         if (ticket.FoodId != null)

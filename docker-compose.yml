@@ -197,8 +197,8 @@ services:
       - CONSUL__HOST=consul
       - CONSUL__PORT=8500
       - TZ=Asia/Ho_Chi_Minh
-      - VnPay__TmnCode=your-real-tmn-code
-      - VnPay__HashSecret=your-real-hash-secret
+#      - VnPay__TmnCode=your-real-tmn-code
+#      - VnPay__HashSecret=your-real-hash-secret
     networks:
       - theater_network
   
