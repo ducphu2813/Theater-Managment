@@ -30,7 +30,7 @@ public class VnPayService : IVnPayService
         var expiryTime = TimeZoneInfo.ConvertTimeFromUtc(expireDate, timeZoneById);
         
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-        var urlCallBack = "http://localhost:5006/payment/api/Payment/payment_result";
+        var urlCallBack = "http://localhost:5173/payment/payment_result";
         
         var pay = new VnPayLibrary();
         pay.AddRequestData("vnp_Version", _configuration["VnPay:Version"]);
