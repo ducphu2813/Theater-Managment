@@ -16,7 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Service\Background\" />
+      <Folder Include="API\" />
+      <Folder Include="Application\" />
     </ItemGroup>
 
 </Project>

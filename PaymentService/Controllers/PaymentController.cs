@@ -60,6 +60,9 @@ public class PaymentController : ControllerBase
         }
         
         //kiểm tra userId trong request có trùng với userId trong ticket không
+        //in thử user id
+        Console.WriteLine($"user id trong body: {model.UserId}");
+        Console.WriteLine($"user id trong ticket: {ticket.Ticket.UserId}");
         if (ticket.Ticket.UserId != model.UserId)
         {
             return BadRequest(new { message = "UserId is not match" });

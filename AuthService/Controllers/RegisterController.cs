@@ -46,7 +46,7 @@ public class RegisterController : ControllerBase
                 {"message", "Please check your email to confirm your account."}
             });
         }
-        catch (Exception e)
+        catch (InvalidOperationException e)
         {
             return BadRequest(new Dictionary<String, String>
             {

@@ -1,18 +1,13 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MovieService.Context;
-using MovieService.Entity;
-using MovieService.Repository;
-using MovieService.Repository.Interface;
-using MovieService.Repository.MongoDBRepo;
-using MovieService.Service;
-using MovieService.Service.Interface;
-using MovieService.Events;
-using MovieService.Messaging;
-using MovieService.Messaging.Interface;
-using MovieService.Middleware;
+using MovieService.API.Middleware;
+using MovieService.Application.Messaging;
+using MovieService.Application.Service;
+using MovieService.Core.Entity;
+using MovieService.Core.Interfaces.Repository;
+using MovieService.Core.Interfaces.Service;
+using MovieService.Infrastructure.Persistence.Context;
+using MovieService.Infrastructure.Persistence.Repositories;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -50,7 +45,7 @@ public class Program
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         
         //đăng ký các Service
-        builder.Services.AddScoped<IMovieService, Service.MovieService>();
+        builder.Services.AddScoped<IMovieService, Application.Service.MovieService>();
         builder.Services.AddScoped<IMovieScheduleService, MovieScheduleService>();
         builder.Services.AddScoped<IRoomService, RoomService>();
         
@@ -76,25 +71,6 @@ public class Program
         {
             client.BaseAddress = new Uri("http://reservation-service"); // Đây chỉ là base URL dựa trên ServiceName được đăng ký ở Consul
         }).AddServiceDiscovery();
-        
-        // Add Authentication
-        // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //     .AddJwtBearer(options =>
-        //     {
-        //         options.TokenValidationParameters = new TokenValidationParameters
-        //         {
-        //             ValidateIssuer = true,
-        //             ValidateAudience = true,
-        //             ValidateLifetime = true,
-        //             ValidateIssuerSigningKey = true,
-        //             ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        //             ValidAudience = builder.Configuration["Jwt:Audience"],
-        //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        //         };
-        //     });
-        
-        // đăng ký HttpClient
-        // builder.Services.AddHttpClient().AddServiceDiscovery();
 
         var app = builder.Build();
 
