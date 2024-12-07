@@ -66,7 +66,7 @@ public class Program
         //đăng ký Consul
         builder.Services.AddServiceDiscovery(options  => options .UseConsul());
         
-        //đăng ký reservation service
+        //đăng ký reservation service http client
         builder.Services.AddHttpClient("reservation-service", client =>
         {
             client.BaseAddress = new Uri("http://reservation-service"); // Đây chỉ là base URL dựa trên ServiceName được đăng ký ở Consul

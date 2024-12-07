@@ -38,7 +38,7 @@ public class RegisterController : ControllerBase
             result = await _userService.RegisterAsync(registerRequest);
             
             //gửi mail xác nhận
-            await _emailService.SendEmailAsync(result.Email, "Confirm Email", "Click here to confirm email: http://localhost:5006/auth/api/Mail/confirm?email=" + result.Email + "&token=" + result.confirmMailToken);
+            await _emailService.SendEmailAsync(result.Email, "Confirm Email", "Click here to confirm email: http://localhost:5173/validaccount?email=" + result.Email + "&token=" + result.confirmMailToken);
         
             return Ok(new Dictionary<String, String>
             {
