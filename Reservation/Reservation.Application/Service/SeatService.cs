@@ -72,4 +72,10 @@ public class SeatService : ISeatService
         return await _seatRepository.UpdateListAsync(seats);
     }
     
+    //xóa ghế theo số phòng
+    public async Task<bool> RemoveByRoomNumberAsync(string roomNumber)
+    {
+        return await _seatRepository.RemoveByRoomNumberAsync(roomNumber);
+    }
+    
 }

@@ -19,4 +19,7 @@ public interface ISeatService
     
     //update nhiều seat
     Task<List<Seat>> UpdateListAsync(List<Seat> seats);
+    
+    //xóa ghế theo số phòng
+    Task<bool> RemoveByRoomNumberAsync(string roomNumber);
 }

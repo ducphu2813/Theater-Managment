@@ -122,31 +122,31 @@ public class MovieScheduleRepository : MongoDBRepository<MovieSchedule>, IMovieS
         if (movieIds != null && movieIds.Count > 0)
         {
             var movieIdFilters = movieIds.Select(m => Builders<MovieSchedule>.Filter.Eq(x => x.MovieId, m));
-            subFilters.Add(Builders<MovieSchedule>.Filter.Or(movieIdFilters));
+            subFilters.Add(Builders<MovieSchedule>.Filter.And(movieIdFilters));
         }
 
         // param roomNumbers
         if (roomNumbers != null && roomNumbers.Count > 0)
         {
             var roomNumberFilters = roomNumbers.Select(r => Builders<MovieSchedule>.Filter.Eq(x => x.RoomNumber, r));
-            subFilters.Add(Builders<MovieSchedule>.Filter.Or(roomNumberFilters));
+            subFilters.Add(Builders<MovieSchedule>.Filter.And(roomNumberFilters));
         }
 
         // param fromShowTimes
         if (fromShowTimes != DateTime.MinValue)
         {
             var fromShowTimeFilter = Builders<MovieSchedule>.Filter.Gte(x => x.ShowTime, fromShowTimes);
-            subFilters.Add(fromShowTimeFilter);
+            subFilters.Add(Builders<MovieSchedule>.Filter.And(fromShowTimeFilter));
         }
 
         // param toShowTimes
         if (toShowTimes != DateTime.MinValue)
         {
             var toShowTimeFilter = Builders<MovieSchedule>.Filter.Lte(x => x.ShowTime, toShowTimes);
-            subFilters.Add(toShowTimeFilter);
+            subFilters.Add(Builders<MovieSchedule>.Filter.And(toShowTimeFilter));
         }
     
-        //gộp filter lại bằng OR
+        //gộp filter lại bằng AND
         var combinedFilter = subFilters.Count > 0 ? Builders<MovieSchedule>.Filter.Or(subFilters) : Builders<MovieSchedule>.Filter.Empty;
         
         //tạo sort theo ShowTime

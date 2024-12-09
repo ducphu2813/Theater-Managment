@@ -26,6 +26,14 @@ public class RoomService : IRoomService
 
     public async Task<Room> AddAsync(Room room)
     {
+        //check xem phòng đã tồn tại chưa
+        var checkExist = await _roomRepository.CheckExistRoomAsync(room.RoomNumber);
+        
+        if (checkExist)
+        {
+            throw new Exception("Room is exist");
+        }
+        
         return await _roomRepository.Add(room);
     }
     

@@ -221,7 +221,7 @@ public class TicketService : ITicketService
             TotalAmount = 0,
             UserId = ticket.UserId,
             CreatedAt = DateTime.Now,
-            ExpiryTime = DateTime.Now.AddMinutes(30) //thêm thời gian hết hạn cho vé trong lúc chờ thanh toán
+            ExpiryTime = DateTime.Now.AddMinutes(5) //thêm thời gian hết hạn cho vé trong lúc chờ thanh toán
         };
         Console.WriteLine("vé mới tạo là : "+newTicket);
         

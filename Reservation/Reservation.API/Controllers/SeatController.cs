@@ -106,4 +106,13 @@ public class SeatController : ControllerBase
         return Ok(result);
     }
     
+    //xóa ghế theo số phòng
+    [HttpDelete]
+    [Route("room/{roomNumber}")]
+    public async Task<IActionResult> RemoveByRoomNumberAsync(string roomNumber)
+    {
+        var result = await _seatService.RemoveByRoomNumberAsync(roomNumber);
+        return Ok(result);
+    }
+    
 }

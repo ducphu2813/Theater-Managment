@@ -42,13 +42,21 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> AddAsync([FromBody] Room room)
     {
         
+        
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        
-        var result = await _roomService.AddAsync(room);
-        return Ok(result);
+        //catch lỗi nếu phòng đã tồn tại
+        try
+        {
+            var result = await _roomService.AddAsync(room);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [HttpPost]

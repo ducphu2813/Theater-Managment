@@ -59,4 +59,12 @@ public class SeatRepository : MongoDBRepository<Seat>, ISeatRepository
         return seats;
     }
     
+    //xóa ghế theo số phòng
+    public async Task<bool> RemoveByRoomNumberAsync(string roomNumber)
+    {
+        var filter = Builders<Seat>.Filter.Eq("RoomNumber", roomNumber);
+        var result = await _collection.DeleteManyAsync(filter);
+        return result.DeletedCount > 0;
+    }
+    
 }
