@@ -14,7 +14,7 @@ Dự án được thiết kế và tổ chức theo mô hình **Clean Architectu
 
 - __Framework__:
 
-  [![My Skills](https://skillicons.dev/icons?i=react,dotnet)](https://skillicons.dev)
+  [![My Skills](https://skillicons.dev/icons?i=react,dotnet,mui)](https://skillicons.dev)
 
 - __Cơ sở dữ liệu__:
 
@@ -26,7 +26,7 @@ Dự án được thiết kế và tổ chức theo mô hình **Clean Architectu
 
 - __Các công cụ hỗ trợ nghiệp vụ__:
 
-  [![My Skills](https://skillicons.dev/icons?i=rabbitmq,docker,yarn,postman)](https://skillicons.dev)
+  [![My Skills](https://skillicons.dev/icons?i=rabbitmq,docker,yarn,postman,npm)](https://skillicons.dev)
 
 - __API Gateway__ ![YARP]()
 
