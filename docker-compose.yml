@@ -1,0 +1,208 @@
+﻿version: '3.8'
+
+volumes:
+  nuget_cache: {}
+  mongo-data: {}
+
+services:
+  
+  ##############
+  #consul service
+  consul:
+    image: hashicorp/consul:latest
+    container_name: Theater.Consul
+    ports:
+      - "8500:8500"
+    networks:
+      - theater_network
+  
+  #################
+  #rabbitmq service
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # cổng cho RabbitMQ server
+      - "15672:15672" # cổng cho RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - theater_network
+  
+  ##############
+  #mongo service
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - theater_network
+  
+  ##############
+  # mongo express service
+#  mongo-express:
+#    image: mongo-express
+#    container_name: mongo-express
+#    depends_on:
+#      - mongo
+#    ports:
+#      - "8081:8081"
+#    environment:
+##      ME_CONFIG_MONGODB_SERVER: mongo
+#      ME_CONFIG_MONGODB_URL: "mongodb://admin:password@mongo:27017/"
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+#      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: password
+#    networks:
+#      - theater_network
+      
+      
+  ##############
+  #gateway service
+  gatewayservice:
+    build:
+      context: .
+      dockerfile: ./APIGateway/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5006:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - theater_network
+  
+  ##############
+  #auth service
+  authservice:
+    build:
+      context: .
+      dockerfile: ./Auth/Auth.API/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages # sử dụng cache để tăng tốc độ build
+    ports:
+      - "5005:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - theater_network
+
+  ##############
+  #movie service
+  movieservice:
+    build:
+      context: .
+      dockerfile: ./Movie/Movie.API/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5002:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - theater_network
+
+  ##############
+  #reservation service
+  reservationservice:
+    build:
+      context: .
+      dockerfile: ./Reservation/Reservation.API/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5003:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - theater_network
+
+  ##############
+  #payment service
+  paymentservice:
+    build:
+      context: .
+      dockerfile: ./Payment/Payment.API/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5004:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+#      - VnPay__TmnCode=your-real-tmn-code
+#      - VnPay__HashSecret=your-real-hash-secret
+    networks:
+      - theater_network
+  
+  ##############
+  #analysis service
+  analysisservice:
+    build:
+      context: .
+      dockerfile: ./Analysis/Analysis.API/Dockerfile
+    volumes:
+      - nuget_cache:/root/.nuget/packages
+    ports:
+      - "5007:8080"
+    depends_on:
+      - mongo
+      - rabbitmq
+      - consul
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - RabbitMQ__HostName=rabbitmq
+      - CONSUL__HOST=consul
+      - CONSUL__PORT=8500
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - theater_network
+    
+
+networks:
+  theater_network:
+    driver: bridge
